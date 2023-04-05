@@ -47,6 +47,7 @@
 
 ## 4. Используемые инструменты
 * Android Studio
+* IntelliJ IDEA
 * SDK tools
 * Gradle
 * Junit
