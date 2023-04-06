@@ -53,7 +53,7 @@
 * Junit
 * Java 11
 * Espresso
-* Appium
+* UIAutomatorviewer
 * Allure
 * GitHub
 
