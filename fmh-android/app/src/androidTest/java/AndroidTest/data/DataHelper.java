@@ -29,13 +29,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 import static org.hamcrest.Matchers.not;
 
-import static AndroidTest.data.Data.correctLogin;
-import static AndroidTest.data.Data.correctPassword;
-import static AndroidTest.pages.AuthPage.loginButton;
-import static AndroidTest.pages.AuthPage.loginField;
-import static AndroidTest.pages.AuthPage.passwordField;
-import static AndroidTest.pages.MainPage.loginOutButton;
-
 import androidx.test.espresso.IdlingRegistry;
 import androidx.test.espresso.IdlingResource;
 import androidx.test.espresso.PerformException;
@@ -47,8 +40,7 @@ import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.espresso.util.HumanReadables;
 import androidx.test.espresso.util.TreeIterables;
 
-import AndroidTest.pages.MainPage;
-
+import AndroidTest.pages.AuthPage;
 
 public class DataHelper {
 
@@ -81,12 +73,9 @@ public class DataHelper {
                             return;
                         }
                     }
-
                     uiController.loopMainThreadForAtLeast(50);
                 }
                 while (System.currentTimeMillis() < endTime);
-
-                // timeout happens
                 throw new PerformException.Builder()
                         .withActionDescription(this.getDescription())
                         .withViewDescription(HumanReadables.describe(view))
@@ -103,7 +92,6 @@ public class DataHelper {
             @Override public Matcher<View> getConstraints() {
                 return ViewMatchers.isAssignableFrom(View.class);
             }
-
 
             @Override public String getDescription() {
                 StringDescription description = new StringDescription();
@@ -232,9 +220,10 @@ public class DataHelper {
 
     public static void waitUntilVisible(ViewInteraction inRoot) {
     }
-
     public static Matcher<Root> isPopupWindow() {
         return isPlatformPopup();
     }
+
+
 
 }
