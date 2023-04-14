@@ -105,6 +105,6 @@ dependencies {
     implementation "androidx.test.espresso:espresso-idling-resource:3.4.0"
 
 
-//    androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.0-alpha01'
-//    androidTestImplementation 'androidx.test.ext:junit:1.2.0-alpha01'
+    implementation 'com.android.support.test.espresso:espresso-contrib:2.2.1'
+    implementation group: 'net.datafaker', name: 'datafaker', version: '1.8.1'
 }

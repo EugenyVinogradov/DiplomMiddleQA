@@ -22,29 +22,43 @@ import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.RootMatchers.isPlatformPopup;
+import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.isRoot;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 import static org.hamcrest.Matchers.not;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.test.espresso.IdlingRegistry;
 import androidx.test.espresso.IdlingResource;
+import androidx.test.espresso.NoMatchingViewException;
 import androidx.test.espresso.PerformException;
 import androidx.test.espresso.Root;
 import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
+import androidx.test.espresso.ViewAssertion;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.espresso.util.HumanReadables;
 import androidx.test.espresso.util.TreeIterables;
 
+
+import net.datafaker.Faker;
+
 import AndroidTest.pages.AuthPage;
 
 public class DataHelper {
 
+    static Faker faker = new Faker();
 
+    public static class FakerData {
+        public static String tittle = "MyDiplom_"+ faker.number().toString();
+}
 
 
     public static ViewAction waitDisplayed(final int viewId, final long millis) {
@@ -147,7 +161,7 @@ public class DataHelper {
         onView(isRoot()).perform(waitDisplayed(id, 5000));
     }
 
-    private static Matcher<View> childAtPosition(
+    public static Matcher<View> childAtPosition(
             final Matcher<View> parentMatcher, final int position) {
 
         return new TypeSafeMatcher<View>() {
@@ -224,6 +238,53 @@ public class DataHelper {
         return isPlatformPopup();
     }
 
+    public static class RecyclerViewAssertions {
+        public static ViewAssertion withRowContaining(final Matcher<View> viewMatcher) {
+            assertNotNull(viewMatcher);
 
+            return new ViewAssertion() {
+
+
+                @Override
+                public void check(View view, NoMatchingViewException noViewException) {
+                    if (noViewException != null) {
+                        throw noViewException;
+                    }
+
+                    assertTrue(view instanceof RecyclerView);
+
+                    RecyclerView recyclerView = (RecyclerView) view;
+                    final RecyclerView.Adapter adapter = recyclerView.getAdapter();
+                    for (int position = 0; position < adapter.getItemCount(); position++) {
+                        int itemType = adapter.getItemViewType(position);
+                        RecyclerView.ViewHolder viewHolder = adapter.createViewHolder(recyclerView, itemType);
+                        adapter.bindViewHolder(viewHolder, position);
+
+                        if (viewHolderMatcher(hasDescendant(viewMatcher)).matches(viewHolder)) {
+                            return;
+                        }
+                    }
+
+                    fail("No match found");
+                }
+            };
+        }
+
+        private static Matcher<RecyclerView.ViewHolder> viewHolderMatcher(final Matcher<View> itemViewMatcher) {
+            return new TypeSafeMatcher<RecyclerView.ViewHolder>() {
+
+                @Override
+                public boolean matchesSafely(RecyclerView.ViewHolder viewHolder) {
+                    return itemViewMatcher.matches(viewHolder.itemView);
+                }
+
+                @Override
+                public void describeTo(Description description) {
+                    description.appendText("holder with view: ");
+                    itemViewMatcher.describeTo(description);
+                }
+            };
+        }
+    }
 
 }

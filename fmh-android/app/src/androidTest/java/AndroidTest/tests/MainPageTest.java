@@ -1,14 +1,29 @@
 package AndroidTest.tests;
 
+import static androidx.test.espresso.Espresso.onData;
+import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.scrollTo;
+import static androidx.test.espresso.action.ViewActions.swipeUp;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition;
+import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.is;
 import static java.lang.Thread.sleep;
 import static AndroidTest.data.Data.dateClaim;
 import static AndroidTest.data.Data.tittleClaim;
+import static AndroidTest.data.DataHelper.RecyclerViewAssertions.withRowContaining;
+import static AndroidTest.data.DataHelper.childAtPosition;
 import static AndroidTest.data.DataHelper.waitElement;
+import static AndroidTest.data.DataHelper.waitUntilVisible;
 import static AndroidTest.pages.AboutPage.aboutInfo;
 import static AndroidTest.pages.AboutPage.backButton;
 import static AndroidTest.pages.AuthPage.successLogin;
@@ -35,6 +50,10 @@ import static AndroidTest.pages.NewsPage.editNewsButtonID;
 import static AndroidTest.pages.QuotesPage.header;
 
 import androidx.test.espresso.Espresso;
+import androidx.test.espresso.ViewInteraction;
+
+import androidx.test.espresso.action.ViewActions;
+import androidx.test.espresso.contrib.RecyclerViewActions;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 
 import org.junit.After;
@@ -43,15 +62,10 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
-
-import AndroidTest.pages.AuthPage;
+import AndroidTest.data.DataHelper;
 import io.qameta.allure.android.runners.AllureAndroidJUnit4;
 import io.qameta.allure.kotlin.junit4.DisplayName;
+import ru.iteco.fmhandroid.R;
 import ru.iteco.fmhandroid.ui.AppActivity;
 
 //@RunWith(AndroidJUnit4.class)
@@ -59,15 +73,15 @@ import ru.iteco.fmhandroid.ui.AppActivity;
 
 public class MainPageTest {
 
-    @Before
-    public void login() {
-        successLogin();
-    }
+//    @Before
+//    public void login() {
+//        successLogin();
+//    }
 
-    @After
-    public void logOutApp() {
-        logOut();
-    }
+//    @After
+//    public void logOutApp() {
+//        logOut();
+//    }
 
     @Rule
     public ActivityScenarioRule<AppActivity> mActivityScenarioRule =
@@ -149,16 +163,21 @@ public class MainPageTest {
         Espresso.pressBack();
         allClimesButton.check(matches(isDisplayed()));
     }
-//    @Test
-//    @DisplayName("Создание Заявки с помощью кнопки на главной странице")
-//    public void createNewClaimWithButtonOnMainPage() throws InterruptedException {
-//        waitElement(allClimesButtonId);
-//        addClimeButton.perform(click());
+    @Test
+    @DisplayName("Создание Заявки с помощью кнопки на главной странице")
+    public void createNewClaimWithButtonOnMainPage() throws InterruptedException {
+        waitElement(allClimesButtonId);
+        goToClaimesPage();
+        addClimeButton.perform(click());
 //        waitElement(tittleFieldID);
-//        createNewClime(dateClaim, "","","","");
-//        sleep(5000);
-//    }
-
+        createNewClime("dateClaim", "","","","");
+        sleep(15000);
+//        onData(withText("Срочно")).perform(ViewActions.scrollTo())
+//                .check(matches(isDisplayed()));
+//        onView(withId(R.id.claim_list_recycler_view))
+//                .check(withRowContaining(withText("15.01.2023")))
+//                .check(withRowContaining(withText("Срочно1")));
+    }
 
 
 }
