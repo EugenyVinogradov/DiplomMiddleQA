@@ -1,5 +1,7 @@
 package AndroidTest.data;
 
+import net.datafaker.Faker;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -7,8 +9,11 @@ import java.util.Date;
 import java.util.Locale;
 
 public class Data {
-    static LocalDateTime date = LocalDateTime.now();
-    public static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+    private static Faker faker = new Faker();
+    private static LocalDateTime date = LocalDateTime.now();
+    private static DateTimeFormatter formatterDate = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+    private  static DateTimeFormatter formatterTime = DateTimeFormatter.ofPattern("hh:mm");
+
 
 
     /* Данные для авторизации */
@@ -19,7 +24,10 @@ public class Data {
 
     /* Данные для создания заявок    */
 
-    public static final String tittleClaim = "Нужна проверка";
-    public static final String dateClaim = formatter.format(date.plusDays(1));
+    public static final String tittleClaim = "MyDiplom_"+ faker.number().numberBetween(1, 9999);
+    public static final String dateClaim = formatterDate.format(date.plusDays(1));
+    public static final String timeClaim = formatterTime.format(date);
+    public static final String descriptionClaim = faker.beer().toString();
+
 
 }

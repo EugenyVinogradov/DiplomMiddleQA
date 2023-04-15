@@ -54,11 +54,7 @@ import AndroidTest.pages.AuthPage;
 
 public class DataHelper {
 
-    static Faker faker = new Faker();
 
-    public static class FakerData {
-        public static String tittle = "MyDiplom_"+ faker.number().toString();
-}
 
 
     public static ViewAction waitDisplayed(final int viewId, final long millis) {
