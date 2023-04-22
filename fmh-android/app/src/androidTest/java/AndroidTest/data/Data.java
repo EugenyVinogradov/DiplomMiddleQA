@@ -11,7 +11,7 @@ import java.util.Locale;
 public class Data {
     private static Faker faker = new Faker();
     private static LocalDateTime date = LocalDateTime.now();
-    private static DateTimeFormatter formatterDate = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+    private static DateTimeFormatter formatterDate = DateTimeFormatter.ofPattern("dd.MM.yyyy");
     private  static DateTimeFormatter formatterTime = DateTimeFormatter.ofPattern("hh:mm");
 
 
@@ -28,6 +28,7 @@ public class Data {
     public static final String dateClaim = formatterDate.format(date.plusDays(1));
     public static final String timeClaim = formatterTime.format(date);
     public static final String descriptionClaim = faker.beer().toString();
+    public static final String executor = "Ivanov Ivan Ivanovich";
 
 
 }

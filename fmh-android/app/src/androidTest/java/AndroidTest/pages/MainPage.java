@@ -10,6 +10,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 
 import static AndroidTest.data.DataHelper.waitElement;
+import static AndroidTest.pages.ClimesPage.createNewClime;
 
 import androidx.test.espresso.ViewInteraction;
 
@@ -35,6 +36,9 @@ public class MainPage {
 
     public static ViewInteraction quotesButton = onView(allOf(withId(R.id.our_mission_image_button)));
     public static int quotesButtonID = R.id.our_mission_image_button;
+
+    public static ViewInteraction addNewClaimButton = onView(allOf(withId(R.id.add_new_claim_material_button)));
+    public static int addNewClaimButtonID = R.id.add_new_claim_material_button;
 
 
     public static void logOut() {
@@ -71,5 +75,10 @@ public class MainPage {
     public static void goToQuotesPage () {
         waitElement(quotesButtonID);
         quotesButton.perform(click());
+    }
+    public static void addNewClaim (String tittle, String executor, String date, String time, String description) {
+        waitElement(addNewClaimButtonID);
+        addNewClaimButton.perform(click());
+        createNewClime(tittle, executor, date, time, description);
     }
 }

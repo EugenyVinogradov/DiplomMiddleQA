@@ -1,16 +1,22 @@
 package AndroidTest.tests;
 
+import static androidx.test.espresso.Espresso.onData;
+import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 import static java.lang.Thread.sleep;
 import static AndroidTest.data.Data.dateClaim;
 import static AndroidTest.data.Data.descriptionClaim;
+import static AndroidTest.data.Data.executor;
 import static AndroidTest.data.Data.timeClaim;
 import static AndroidTest.data.Data.tittleClaim;
+import static AndroidTest.data.DataHelper.RecyclerViewAssertions.withRowContaining;
 import static AndroidTest.data.DataHelper.waitElement;
 import static AndroidTest.pages.AboutPage.aboutInfo;
 import static AndroidTest.pages.AboutPage.backButton;
@@ -18,7 +24,9 @@ import static AndroidTest.pages.AboutPage.backButton;
 import static AndroidTest.pages.ClimesPage.createNewClime;
 import static AndroidTest.pages.ClimesPage.filterClimesButton;
 import static AndroidTest.pages.ClimesPage.filterClimesButtonID;
+import static AndroidTest.pages.ClimesPage.isClaimExistWithParams;
 import static AndroidTest.pages.MainPage.addClimeButton;
+import static AndroidTest.pages.MainPage.addNewClaim;
 import static AndroidTest.pages.MainPage.allClimesButton;
 import static AndroidTest.pages.MainPage.allClimesButtonId;
 import static AndroidTest.pages.MainPage.climesButton;
@@ -73,7 +81,7 @@ public class MainPageTest {
 
   @Rule
   public ActivityScenarioRule<AppActivity> mActivityScenarioRule =
-          new ActivityScenarioRule<>(AppActivity.class);
+      new ActivityScenarioRule<>(AppActivity.class);
 
 
   @Test
@@ -158,17 +166,12 @@ public class MainPageTest {
 
   @Test
   @DisplayName("Создание Заявки с помощью кнопки на главной странице")
-  public void createNewClaimWithButtonOnMainPage() throws InterruptedException {
-    waitElement(allClimesButtonId);
+  public void createNewClaimWithButtonOnMainPage() {
+//    addNewClaim(tittleClaim, executor, dateClaim, timeClaim, descriptionClaim);
     goToClaimesPage();
-    addClimeButton.perform(click());
-    createNewClime(tittleClaim, 1, dateClaim, timeClaim, descriptionClaim);
-//    sleep(5000);
-//        onData(withText("Срочно")).perform(ViewActions.scrollTo())
-//                .check(matches(isDisplayed()));
-//        onView(withId(R.id.claim_list_recycler_view))
-//                .check(withRowContaining(withText("15.01.2023")))
-//                .check(withRowContaining(withText("Срочно")));
+    onData(withText("MyDiplom_7006")).perform(ViewActions.scrollTo())
+        .check(matches(isDisplayed()));
+//    isClaimExistWithParams(tittleClaim, executor, dateClaim, timeClaim, descriptionClaim);
   }
 
 
