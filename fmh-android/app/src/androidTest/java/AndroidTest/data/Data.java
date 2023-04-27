@@ -24,7 +24,7 @@ public class Data {
 
     /* Данные для создания заявок    */
 
-    public static final String tittleClaim = "MyDiplom_"+ faker.number().numberBetween(1, 9999);
+    public static final String tittleClaim = "MyDiplom_"+ faker.number().numberBetween(1, 9999999);
     public static final String dateClaim = formatterDate.format(date.plusDays(1));
     public static final String timeClaim = formatterTime.format(date);
     public static final String descriptionClaim = faker.beer().toString();

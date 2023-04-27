@@ -6,10 +6,13 @@ import static androidx.test.espresso.action.ViewActions.click;
 
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 
+import static androidx.test.espresso.contrib.RecyclerViewActions.scrollTo;
+import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
+import static org.hamcrest.Matchers.allOf;
 import static java.lang.Thread.sleep;
 import static AndroidTest.data.Data.dateClaim;
 import static AndroidTest.data.Data.descriptionClaim;
@@ -21,6 +24,7 @@ import static AndroidTest.data.DataHelper.waitElement;
 import static AndroidTest.pages.AboutPage.aboutInfo;
 import static AndroidTest.pages.AboutPage.backButton;
 
+import static AndroidTest.pages.AuthPage.successLogin;
 import static AndroidTest.pages.ClimesPage.createNewClime;
 import static AndroidTest.pages.ClimesPage.filterClimesButton;
 import static AndroidTest.pages.ClimesPage.filterClimesButtonID;
@@ -69,15 +73,15 @@ import ru.iteco.fmhandroid.ui.AppActivity;
 
 public class MainPageTest {
 
-//    @Before
-//    public void login() {
-//        successLogin();
-//    }
+    @Before
+    public void login() {
+        successLogin();
+    }
 
-//    @After
-//    public void logOutApp() {
-//        logOut();
-//    }
+    @After
+    public void logOutApp() {
+        logOut();
+    }
 
   @Rule
   public ActivityScenarioRule<AppActivity> mActivityScenarioRule =
@@ -167,12 +171,9 @@ public class MainPageTest {
   @Test
   @DisplayName("Создание Заявки с помощью кнопки на главной странице")
   public void createNewClaimWithButtonOnMainPage() {
-//    addNewClaim(tittleClaim, executor, dateClaim, timeClaim, descriptionClaim);
+    addNewClaim(tittleClaim, dateClaim, timeClaim, descriptionClaim);
     goToClaimesPage();
-    onData(withText("MyDiplom_7006")).perform(ViewActions.scrollTo())
-        .check(matches(isDisplayed()));
-//    isClaimExistWithParams(tittleClaim, executor, dateClaim, timeClaim, descriptionClaim);
+    isClaimExistWithParams(tittleClaim, dateClaim, timeClaim, descriptionClaim);
   }
-
 
 }

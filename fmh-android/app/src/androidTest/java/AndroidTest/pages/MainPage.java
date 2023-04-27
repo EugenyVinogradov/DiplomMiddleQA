@@ -76,9 +76,9 @@ public class MainPage {
         waitElement(quotesButtonID);
         quotesButton.perform(click());
     }
-    public static void addNewClaim (String tittle, String executor, String date, String time, String description) {
+    public static void addNewClaim (String tittle, String date, String time, String description) {
         waitElement(addNewClaimButtonID);
         addNewClaimButton.perform(click());
-        createNewClime(tittle, executor, date, time, description);
+        createNewClime(tittle, date, time, description);
     }
 }

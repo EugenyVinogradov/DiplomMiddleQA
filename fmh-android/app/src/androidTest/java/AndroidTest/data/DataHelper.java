@@ -1,5 +1,6 @@
 package AndroidTest.data;
 
+import android.content.res.Resources;
 import android.os.IBinder;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,11 +29,15 @@ import static androidx.test.espresso.matcher.ViewMatchers.isRoot;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import androidx.annotation.IdRes;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.test.espresso.IdlingRegistry;
 import androidx.test.espresso.IdlingResource;
@@ -43,6 +48,7 @@ import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
 import androidx.test.espresso.ViewAssertion;
 import androidx.test.espresso.ViewInteraction;
+import androidx.test.espresso.matcher.BoundedMatcher;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.espresso.util.HumanReadables;
 import androidx.test.espresso.util.TreeIterables;
@@ -266,7 +272,7 @@ public class DataHelper {
             };
         }
 
-        private static Matcher<RecyclerView.ViewHolder> viewHolderMatcher(final Matcher<View> itemViewMatcher) {
+        public static Matcher<RecyclerView.ViewHolder> viewHolderMatcher(final Matcher<View> itemViewMatcher) {
             return new TypeSafeMatcher<RecyclerView.ViewHolder>() {
 
                 @Override
@@ -282,5 +288,101 @@ public class DataHelper {
             };
         }
     }
+    public static int getCountFromRecyclerView(@IdRes int RecyclerViewId) {
+        final int[] COUNT = {0};
+        Matcher matcher = new TypeSafeMatcher<View>() {
+            @Override
+            protected boolean matchesSafely(View item) {
+                COUNT[0] = ((RecyclerView) item).getAdapter().getItemCount();
+                return true;
+            }
+            @Override
+            public void describeTo(Description description) {}
+        };
+        onView(allOf(withId(RecyclerViewId),isDisplayed())).check(matches(matcher));
+        return COUNT[0];
+    }
+    public static Matcher<View> hasItem(Matcher<View> matcher) {
+        return new BoundedMatcher<View, RecyclerView>(RecyclerView.class) {
 
+            @Override public void describeTo(Description description) {
+                description.appendText("has item: ");
+                matcher.describeTo(description);
+            }
+
+            @Override protected boolean matchesSafely(RecyclerView view) {
+                RecyclerView.Adapter adapter = view.getAdapter();
+                for (int position = 0; position < adapter.getItemCount(); position++) {
+                    int type = adapter.getItemViewType(position);
+                    RecyclerView.ViewHolder holder = adapter.createViewHolder(view, type);
+                    adapter.onBindViewHolder(holder, position);
+                    if (matcher.matches(holder.itemView)) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+        };
+    }
+    public static class RecyclerViewMatcher {
+        private final int recyclerViewId;
+
+        public static RecyclerViewMatcher withRecyclerView(final int recyclerViewId) {
+            return new RecyclerViewMatcher(recyclerViewId);
+        }
+
+        public RecyclerViewMatcher(int recyclerViewId) {
+            this.recyclerViewId = recyclerViewId;
+        }
+
+        public Matcher<View> atPosition(final int position) {
+            return atPositionOnView(position, -1);
+        }
+
+        public Matcher<View> atPositionOnView(final int position, final int targetViewId) {
+
+            return new TypeSafeMatcher<View>() {
+                Resources resources = null;
+                View childView;
+
+                public void describeTo(Description description) {
+                    String idDescription = Integer.toString(recyclerViewId);
+                    if (this.resources != null) {
+                        try {
+                            idDescription = this.resources.getResourceName(recyclerViewId);
+                        } catch (Resources.NotFoundException var4) {
+                            idDescription = String.format("%s (resource not found)", recyclerViewId);
+                        }
+                    }
+
+                    description.appendText("with id: " + idDescription);
+                }
+
+                public boolean matchesSafely(View view) {
+
+                    this.resources = view.getResources();
+
+                    if (childView == null) {
+                        RecyclerView recyclerView = view.getRootView().findViewById(recyclerViewId);
+                        if (recyclerView != null && recyclerView.getId() == recyclerViewId) {
+                            RecyclerView.ViewHolder viewHolder = recyclerView.findViewHolderForAdapterPosition(position);
+                            if (viewHolder != null) {
+                                childView = viewHolder.itemView;
+                            }
+                        }
+                        else {
+                            return false;
+                        }
+                    }
+
+                    if (targetViewId == -1) {
+                        return view == childView;
+                    } else {
+                        View targetView = childView.findViewById(targetViewId);
+                        return view == targetView;
+                    }
+                }
+            };
+        }
+    }
 }
