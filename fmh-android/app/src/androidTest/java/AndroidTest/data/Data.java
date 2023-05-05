@@ -2,11 +2,8 @@ package AndroidTest.data;
 
 import net.datafaker.Faker;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
-import java.util.Locale;
 
 public class Data {
     private static Faker faker = new Faker();

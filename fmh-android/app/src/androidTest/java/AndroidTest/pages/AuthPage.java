@@ -8,8 +8,9 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.supportsInputMethods;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static org.hamcrest.Matchers.allOf;
 
+
+import static org.hamcrest.CoreMatchers.allOf;
 import static AndroidTest.data.Data.correctLogin;
 import static AndroidTest.data.Data.correctPassword;
 import static AndroidTest.data.DataHelper.waitElement;

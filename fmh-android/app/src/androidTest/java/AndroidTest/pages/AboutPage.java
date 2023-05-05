@@ -2,7 +2,9 @@ package AndroidTest.pages;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static org.hamcrest.Matchers.allOf;
+
+
+import static org.hamcrest.CoreMatchers.allOf;
 
 import androidx.test.espresso.ViewInteraction;
 

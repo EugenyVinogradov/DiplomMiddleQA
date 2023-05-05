@@ -8,26 +8,24 @@ import android.view.ViewParent;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
-import org.hamcrest.StringDescription;
-import org.hamcrest.TypeSafeMatcher;
+
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeoutException;
+import java.util.concurrent.atomic.AtomicReference;
 
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.actionWithAssertions;
-import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.core.internal.deps.guava.base.Preconditions.checkNotNull;
 import static androidx.test.espresso.matcher.RootMatchers.isPlatformPopup;
 import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.isRoot;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
@@ -38,6 +36,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import androidx.annotation.IdRes;
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.test.espresso.IdlingRegistry;
 import androidx.test.espresso.IdlingResource;
@@ -52,13 +51,24 @@ import androidx.test.espresso.matcher.BoundedMatcher;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.espresso.util.HumanReadables;
 import androidx.test.espresso.util.TreeIterables;
+import androidx.test.ext.junit.rules.ActivityScenarioRule;
 
 
 import net.datafaker.Faker;
 
+import org.hamcrest.Description;
+import org.hamcrest.Matcher;
+import org.hamcrest.StringDescription;
+import org.hamcrest.TypeSafeMatcher;
+
 import AndroidTest.pages.AuthPage;
+import ru.iteco.fmhandroid.R;
+import ru.iteco.fmhandroid.ui.AppActivity;
 
 public class DataHelper {
+
+    public static ActivityScenarioRule<AppActivity> mActivityScenarioRule =
+        new ActivityScenarioRule<>(AppActivity.class);
 
 
 
@@ -385,4 +395,65 @@ public class DataHelper {
             };
         }
     }
+
+    public static class RecyclerViewItemCountIdlingResource implements IdlingResource {
+        private final RecyclerView recyclerView;
+        private final int expectedCount;
+        private volatile ResourceCallback resourceCallback;
+
+        public RecyclerViewItemCountIdlingResource(RecyclerView recyclerView) {
+            this.recyclerView = recyclerView;
+            this.expectedCount = recyclerView.getAdapter().getItemCount();
+        }
+
+        @Override
+        public String getName() {
+            return RecyclerViewItemCountIdlingResource.class.getName();
+        }
+
+        @Override
+        public boolean isIdleNow() {
+            int currentCount = recyclerView.getAdapter().getItemCount();
+            boolean idle = currentCount == expectedCount;
+            if (idle && resourceCallback != null) {
+                resourceCallback.onTransitionToIdle();
+            }
+            return idle;
+        }
+
+        @Override
+        public void registerIdleTransitionCallback(ResourceCallback callback) {
+            this.resourceCallback = callback;
+        }
+    }
+
+    public static int getItemCount() {
+        AtomicReference<Integer> count = new AtomicReference<>(0);
+        mActivityScenarioRule.getScenario().onActivity(activity -> {
+            RecyclerView recyclerView = activity.findViewById(R.id.claim_list_recycler_view);
+            count.set(recyclerView.getAdapter().getItemCount());
+        });
+        return count.get();
+    }
+
+    public static Matcher<View> atPosition(final int position, @NonNull final Matcher<View> itemMatcher) {
+        return new BoundedMatcher<View, RecyclerView>(RecyclerView.class) {
+            @Override
+            public void describeTo(Description description) {
+                description.appendText("has item at position " + position + ": ");
+                itemMatcher.describeTo(description);
+            }
+
+            @Override
+            protected boolean matchesSafely(final RecyclerView recyclerView) {
+                final RecyclerView.ViewHolder viewHolder = recyclerView.findViewHolderForAdapterPosition(position);
+                if (viewHolder == null) {
+                    // has no item on such position
+                    return false;
+                }
+                return itemMatcher.matches(viewHolder.itemView);
+            }
+        };
+    }
+
 }

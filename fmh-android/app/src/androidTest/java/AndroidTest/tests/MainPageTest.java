@@ -1,38 +1,21 @@
 package AndroidTest.tests;
 
-import static androidx.test.espresso.Espresso.onData;
-import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
-
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
-
-import static androidx.test.espresso.contrib.RecyclerViewActions.scrollTo;
-import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static androidx.test.espresso.matcher.ViewMatchers.withText;
-
-import static org.hamcrest.Matchers.allOf;
-import static java.lang.Thread.sleep;
 import static AndroidTest.data.Data.dateClaim;
 import static AndroidTest.data.Data.descriptionClaim;
-import static AndroidTest.data.Data.executor;
 import static AndroidTest.data.Data.timeClaim;
 import static AndroidTest.data.Data.tittleClaim;
-import static AndroidTest.data.DataHelper.RecyclerViewAssertions.withRowContaining;
 import static AndroidTest.data.DataHelper.waitElement;
 import static AndroidTest.pages.AboutPage.aboutInfo;
 import static AndroidTest.pages.AboutPage.backButton;
-
 import static AndroidTest.pages.AuthPage.successLogin;
-import static AndroidTest.pages.ClimesPage.createNewClime;
 import static AndroidTest.pages.ClimesPage.filterClimesButton;
 import static AndroidTest.pages.ClimesPage.filterClimesButtonID;
 import static AndroidTest.pages.ClimesPage.isClaimExistWithParams;
-import static AndroidTest.pages.MainPage.addClimeButton;
 import static AndroidTest.pages.MainPage.addNewClaim;
 import static AndroidTest.pages.MainPage.allClimesButton;
-import static AndroidTest.pages.MainPage.allClimesButtonId;
 import static AndroidTest.pages.MainPage.climesButton;
 import static AndroidTest.pages.MainPage.goToAboutPage;
 import static AndroidTest.pages.MainPage.goToClaimesPage;
@@ -42,30 +25,18 @@ import static AndroidTest.pages.MainPage.goToNewsPageByNavigationMenu;
 import static AndroidTest.pages.MainPage.goToQuotesPage;
 import static AndroidTest.pages.MainPage.logOut;
 import static AndroidTest.pages.MainPage.mainMenuButton;
-import static AndroidTest.pages.MainPage.mainMenuButtonId;
 import static AndroidTest.pages.MainPage.newsButton;
-import static AndroidTest.pages.NewClaim.tittleFieldID;
 import static AndroidTest.pages.NewsPage.editNewsButton;
-import static AndroidTest.pages.NewsPage.editNewsButtonID;
 import static AndroidTest.pages.QuotesPage.header;
-
 import androidx.test.espresso.Espresso;
-import androidx.test.espresso.ViewInteraction;
-
-import androidx.test.espresso.action.ViewActions;
-import androidx.test.espresso.contrib.RecyclerViewActions;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import AndroidTest.data.DataHelper;
 import io.qameta.allure.android.runners.AllureAndroidJUnit4;
 import io.qameta.allure.kotlin.junit4.DisplayName;
-import ru.iteco.fmhandroid.R;
 import ru.iteco.fmhandroid.ui.AppActivity;
 
 //@RunWith(AndroidJUnit4.class)

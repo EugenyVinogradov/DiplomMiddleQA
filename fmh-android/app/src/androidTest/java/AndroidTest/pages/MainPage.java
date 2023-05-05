@@ -2,15 +2,17 @@ package AndroidTest.pages;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.Matchers.allOf;
 
+import static org.hamcrest.CoreMatchers.allOf;
 import static AndroidTest.data.DataHelper.waitElement;
-import static AndroidTest.pages.ClimesPage.createNewClime;
+import static AndroidTest.pages.ClimesPage.fillingFieldsNewClime;
+import static AndroidTest.pages.NewClaim.saveButton;
 
 import androidx.test.espresso.ViewInteraction;
 
@@ -79,6 +81,7 @@ public class MainPage {
     public static void addNewClaim (String tittle, String date, String time, String description) {
         waitElement(addNewClaimButtonID);
         addNewClaimButton.perform(click());
-        createNewClime(tittle, date, time, description);
+        fillingFieldsNewClime(tittle, date, time, description);
+        saveButton.perform(scrollTo()).perform(click());
     }
 }
