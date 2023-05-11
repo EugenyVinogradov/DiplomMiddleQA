@@ -3,6 +3,7 @@ package AndroidTest.tests;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static java.lang.Thread.sleep;
 import static AndroidTest.data.Data.dateClaim;
 import static AndroidTest.data.Data.descriptionClaim;
 import static AndroidTest.data.Data.timeClaim;

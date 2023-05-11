@@ -10,6 +10,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 import static org.hamcrest.CoreMatchers.allOf;
+import static java.lang.Thread.sleep;
 import static AndroidTest.data.DataHelper.waitElement;
 import static AndroidTest.pages.ClimesPage.fillingFieldsNewClime;
 import static AndroidTest.pages.NewClaim.saveButton;
@@ -78,7 +79,7 @@ public class MainPage {
         waitElement(quotesButtonID);
         quotesButton.perform(click());
     }
-    public static void addNewClaim (String tittle, String date, String time, String description) {
+    public static void addNewClaim (String tittle, String date, String time, String description){
         waitElement(addNewClaimButtonID);
         addNewClaimButton.perform(click());
         fillingFieldsNewClime(tittle, date, time, description);

@@ -5,6 +5,7 @@ import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.contrib.RecyclerViewActions.actionOnItem;
 import static androidx.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition;
 import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.isChecked;
@@ -16,6 +17,9 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.Matchers.anyOf;
 import static AndroidTest.data.DataHelper.waitDisplayed;
+import static AndroidTest.data.DataHelper.waitElement;
+import static AndroidTest.pages.NewClaim.cancelButton;
+import static AndroidTest.pages.NewClaim.confirmCancelButtonOk;
 import static AndroidTest.pages.NewClaim.dateField;
 import static AndroidTest.pages.NewClaim.descriptionField;
 import static AndroidTest.pages.NewClaim.executorMenuButton;
@@ -41,9 +45,6 @@ public class ClimesPage {
   public static ViewInteraction filterClimesButton = onView(withId(R.id.filters_material_button));
   public static int filterClimesButtonID = R.id.filters_material_button;
 
-//  public static ActivityScenarioRule<AppActivity> mActivityScenarioRule =
-//      new ActivityScenarioRule<>(AppActivity.class);
-
   public static void fillingFieldsNewClime(String tittle, String date, String time, String description) {
     tittleField.perform(replaceText(tittle));
     dateField.perform(replaceText(date));
@@ -51,19 +52,8 @@ public class ClimesPage {
     descriptionField.perform(replaceText(description));
     ViewActions.closeSoftKeyboard();
   }
-
-  public static void chooseExecutor(String executor) {
-    executorMenuButton.perform(click());
-    onView(allOf(withId(R.id.executor_drop_menu_auto_complete_text_view)))
-        .perform(replaceText(executor));
-  }
-
   public static void isClaimExistWithParams(String tittle, String date, String time, String description) {
-    onView(withId(R.id.claim_list_recycler_view))
-        .perform(RecyclerViewActions.scrollTo(hasDescendant(allOf(withText(tittle)))))
-        .perform(click());
-    onView(withId(R.id.claim_list_recycler_view))
-        .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(tittle)), click()));
+    scrollAndClickToClaimWithTittle(tittle);
     onView(withId(R.id.title_text_view)).check(matches(withText(tittle)));
     onView(withId(R.id.plane_date_text_view)).check(matches(withText(date)));
     onView(withId(R.id.plan_time_text_view)).check(matches(withText(time)));
@@ -71,6 +61,7 @@ public class ClimesPage {
   }
 
   public static void filterClimes(boolean open, boolean inProgress, boolean executed, boolean cancelled) {
+    waitElement(R.id.claim_list_recycler_view);
     onView(withId(R.id.filters_material_button)).perform(click());
     if (!open) {
       onView(withId(R.id.item_filter_open)).check(matches(isChecked())).perform(click());
@@ -179,6 +170,30 @@ public class ClimesPage {
       }
       Espresso.pressBack();
     }
+  }
+  public static void scrollAndClickToClaimWithTittle (String tittle) {
+    onView(withId(R.id.claim_list_recycler_view))
+        .perform(RecyclerViewActions.scrollTo(hasDescendant(allOf(withText(tittle)))));
+    onView(withId(R.id.claim_list_recycler_view))
+        .perform(actionOnItem(hasDescendant(withText(tittle)), click()));
+  }
+  public static void addNewClime(String tittle, String date, String time, String description) {
+    newClimeButton.perform(click());
+    fillingFieldsNewClime(tittle, date, time, description);
+    saveButton.perform(click());
+    waitElement(R.id.filters_material_button);
+  }
+
+  public static void cancelAddingNewClimeWhenPressedCancel(String tittle, String date, String time, String description) {
+    newClimeButton.perform(click());
+    fillingFieldsNewClime(tittle, date, time, description);
+    cancelButton.perform(click());
+    confirmCancelButtonOk.perform(click());
+  }
+  public static void cancelAddingNewClimeWhenPressedBack(String tittle, String date, String time, String description) {
+    newClimeButton.perform(click());
+    fillingFieldsNewClime(tittle, date, time, description);
+    Espresso.pressBack();
   }
 }
 
