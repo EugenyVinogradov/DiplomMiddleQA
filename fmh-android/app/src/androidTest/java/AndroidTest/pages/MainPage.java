@@ -13,7 +13,7 @@ import static org.hamcrest.CoreMatchers.allOf;
 import static java.lang.Thread.sleep;
 import static AndroidTest.data.DataHelper.waitElement;
 import static AndroidTest.pages.ClimesPage.fillingFieldsNewClime;
-import static AndroidTest.pages.NewClaim.saveButton;
+import static AndroidTest.pages.NewClaimPage.saveButton;
 
 import androidx.test.espresso.ViewInteraction;
 

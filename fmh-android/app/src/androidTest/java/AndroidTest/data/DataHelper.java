@@ -1,5 +1,6 @@
 package AndroidTest.data;
 
+import android.content.Context;
 import android.content.res.Resources;
 import android.os.IBinder;
 import android.view.View;
@@ -7,7 +8,7 @@ import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
-
+import android.widget.TextView;
 
 
 import java.util.concurrent.CountDownLatch;
@@ -21,6 +22,7 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.core.internal.deps.guava.base.Preconditions.checkNotNull;
 import static androidx.test.espresso.matcher.RootMatchers.isPlatformPopup;
 import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
+import static androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.isRoot;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
@@ -34,6 +36,8 @@ import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+
+import static AndroidTest.data.DataHelper.RecyclerViewMatcher.withRecyclerView;
 
 import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
@@ -52,6 +56,7 @@ import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.espresso.util.HumanReadables;
 import androidx.test.espresso.util.TreeIterables;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
+import androidx.test.platform.app.InstrumentationRegistry;
 
 
 import net.datafaker.Faker;
@@ -116,7 +121,7 @@ public class DataHelper {
     public static ViewAction waitUntil(Matcher<View> matcher) {
         return actionWithAssertions(new ViewAction() {
             @Override public Matcher<View> getConstraints() {
-                return ViewMatchers.isAssignableFrom(View.class);
+                return isAssignableFrom(View.class);
             }
 
             @Override public String getDescription() {
@@ -192,7 +197,7 @@ public class DataHelper {
         };
     }
 
-    public void waitUntilVisible(View view) {
+    public static void waitUntilVisible(View view) {
         final CountDownLatch latch = new CountDownLatch(1);
         ViewTreeObserver observer = view.getViewTreeObserver();
         observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -426,15 +431,15 @@ public class DataHelper {
             this.resourceCallback = callback;
         }
     }
-
-    public static int getItemCount() {
-        AtomicReference<Integer> count = new AtomicReference<>(0);
-        mActivityScenarioRule.getScenario().onActivity(activity -> {
-            RecyclerView recyclerView = activity.findViewById(R.id.claim_list_recycler_view);
-            count.set(recyclerView.getAdapter().getItemCount());
-        });
-        return count.get();
-    }
+//
+//    public static int getItemCount() {
+//        AtomicReference<Integer> count = new AtomicReference<>(0);
+//        mActivityScenarioRule.getScenario().onActivity(activity -> {
+//            RecyclerView recyclerView = activity.findViewById(R.id.claim_list_recycler_view);
+//            count.set(recyclerView.getAdapter().getItemCount());
+//        });
+//        return count.get();
+//    }
 
     public static Matcher<View> atPosition(final int position, @NonNull final Matcher<View> itemMatcher) {
         return new BoundedMatcher<View, RecyclerView>(RecyclerView.class) {
@@ -455,5 +460,64 @@ public class DataHelper {
             }
         };
     }
+    public static String getTextFromViewInteraction(ViewInteraction viewInteraction) {
+        final String[] text = {""};
+        viewInteraction.perform(new ViewAction() {
+            @Override
+            public Matcher<View> getConstraints() {
+                return isAssignableFrom(TextView.class);
+            }
 
+            @Override
+            public String getDescription() {
+                return "Getting text from ViewInteraction";
+            }
+
+            @Override
+            public void perform(UiController uiController, View view) {
+                TextView textView = (TextView) view;
+                text[0] = textView.getText().toString();
+            }
+        });
+        return text[0];
+    }
+
+    public static String getStringFromResource(int resourceId) {
+        Context targetContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        return targetContext.getResources().getString(resourceId);
+    }
+    public static int getRecyclerViewItemCount(@IdRes int recyclerViewId) {
+        final int[] count = new int[1];
+        onView(allOf(withId(recyclerViewId), isDisplayed()))
+            .check((view, noViewFoundException) -> {
+                if (view instanceof RecyclerView) {
+                    RecyclerView recyclerView = (RecyclerView) view;
+                    RecyclerView.Adapter adapter = recyclerView.getAdapter();
+                    if (adapter != null) {
+                        count[0] = adapter.getItemCount();
+                    }
+                }
+            });
+        return count[0];
+    }
+    public static String getItemDateText(int recyclerViewId, int position) {
+        final String[] itemDateText = new String[1];
+        onView(withRecyclerView(recyclerViewId).atPosition(position))
+            .check((view, noViewFoundException) -> {
+                if (noViewFoundException != null) {
+                    throw noViewFoundException;
+                }
+                TextView dateTextView = view.findViewById(R.id.news_item_date_text_view);
+                itemDateText[0] = dateTextView.getText().toString();
+            });
+        return itemDateText[0];
+    }
+    public static int getRecyclerViewItemHeight(RecyclerView recyclerView, int position) {
+        RecyclerView.ViewHolder viewHolder = recyclerView.findViewHolderForAdapterPosition(position);
+        if (viewHolder != null) {
+            View itemView = viewHolder.itemView;
+            return itemView.getHeight();
+        }
+        return 0;
+    }
 }
