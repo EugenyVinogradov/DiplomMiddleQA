@@ -512,12 +512,50 @@ public class DataHelper {
             });
         return itemDateText[0];
     }
-    public static int getRecyclerViewItemHeight(RecyclerView recyclerView, int position) {
-        RecyclerView.ViewHolder viewHolder = recyclerView.findViewHolderForAdapterPosition(position);
-        if (viewHolder != null) {
-            View itemView = viewHolder.itemView;
-            return itemView.getHeight();
+    public static class GetHeightAfterClickViewAction implements ViewAction {
+
+        private int[] heightAfterClick;
+
+        public GetHeightAfterClickViewAction(int[] heightAfterClick) {
+            this.heightAfterClick = heightAfterClick;
         }
-        return 0;
+
+        @Override
+        public Matcher<View> getConstraints() {
+            return isAssignableFrom(RecyclerView.class);
+        }
+
+        @Override
+        public String getDescription() {
+            return "Get height after click";
+        }
+
+        @Override
+        public void perform(UiController uiController, View view) {
+            RecyclerView recyclerView = (RecyclerView) view;
+            View firstItem = recyclerView.getChildAt(0);
+            if (firstItem != null) {
+                heightAfterClick[0] = firstItem.getHeight();
+            }
+        }
     }
+    public static ViewAction getHeightAfterClickViewAction(final int[] heightAfterClick) {
+        return new ViewAction() {
+            @Override
+            public Matcher<View> getConstraints() {
+                return isAssignableFrom(View.class);
+            }
+
+            @Override
+            public String getDescription() {
+                return "Get height after click";
+            }
+
+            @Override
+            public void perform(UiController uiController, View view) {
+                heightAfterClick[0] = view.getHeight();
+            }
+        };
+    }
+
 }
