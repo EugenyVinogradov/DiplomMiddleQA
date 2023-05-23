@@ -51,6 +51,7 @@ import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
 import androidx.test.espresso.ViewAssertion;
 import androidx.test.espresso.ViewInteraction;
+import androidx.test.espresso.contrib.RecyclerViewActions;
 import androidx.test.espresso.matcher.BoundedMatcher;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.espresso.util.HumanReadables;
@@ -512,6 +513,30 @@ public class DataHelper {
             });
         return itemDateText[0];
     }
+    public static String getItemDateText2(int recyclerViewId, int position) {
+        final String[] itemDateText = new String[1];
+        onView(withRecyclerView(recyclerViewId).atPosition(position))
+            .check((view, noViewFoundException) -> {
+                if (noViewFoundException != null) {
+                    throw noViewFoundException;
+                }
+                TextView dateTextView = view.findViewById(R.id.news_item_publication_date_text_view);
+                itemDateText[0] = dateTextView.getText().toString();
+            });
+        return itemDateText[0];
+    }
+    public static String getTextFromNews(int fieldId, int position) {
+        final String[] itemDateText = new String[1];
+        onView(withRecyclerView(R.id.news_list_recycler_view).atPosition(position))
+            .check((view, noViewFoundException) -> {
+                if (noViewFoundException != null) {
+                    throw noViewFoundException;
+                }
+                TextView dateTextView = view.findViewById(fieldId);
+                itemDateText[0] = dateTextView.getText().toString();
+            });
+        return itemDateText[0];
+    }
     public static class GetHeightAfterClickViewAction implements ViewAction {
 
         private int[] heightAfterClick;
@@ -539,8 +564,10 @@ public class DataHelper {
             }
         }
     }
-    public static ViewAction getHeightAfterClickViewAction(final int[] heightAfterClick) {
-        return new ViewAction() {
+    public static int getViewHeight(int recyclerViewId, int position) {
+        final int[] height = {0};
+        onView(withId(recyclerViewId)).perform(RecyclerViewActions.scrollToPosition(position));
+        onView(withId(recyclerViewId)).perform(RecyclerViewActions.actionOnItemAtPosition(position, new ViewAction() {
             @Override
             public Matcher<View> getConstraints() {
                 return isAssignableFrom(View.class);
@@ -548,12 +575,36 @@ public class DataHelper {
 
             @Override
             public String getDescription() {
-                return "Get height after click";
+                return "Get height of item";
             }
 
             @Override
             public void perform(UiController uiController, View view) {
-                heightAfterClick[0] = view.getHeight();
+                height[0] = view.getHeight();
+            }
+        }));
+        return height[0];
+    }
+    public static ViewAction waitForView(final long millis) {
+        return new ViewAction() {
+            @Override
+            public Matcher<View> getConstraints() {
+                return isRoot();
+            }
+
+            @Override
+            public String getDescription() {
+                return "Ожидание определенного представления";
+            }
+
+            @Override
+            public void perform(UiController uiController, View view) {
+                uiController.loopMainThreadUntilIdle();
+                final long startTime = System.currentTimeMillis();
+                final long endTime = startTime + millis;
+                while (System.currentTimeMillis() < endTime) {
+                    // Ничего не делать и ждать
+                }
             }
         };
     }

@@ -31,14 +31,32 @@ public class Data {
     public static final String newDateClaim = formatterDate.format(date.plusDays(2));
     public static final String timeClaim = formatterTime.format(date.plusMinutes(2));
     public static final String newTimeClaim = formatterTime.format(date.plusMinutes(4));
-    public static final String descriptionClaim = faker.beer().toString();
-    public static final String newDescriptionClaim = faker.rickAndMorty().toString();
+    public static final String descriptionClaim = "Description"+ faker.beer().toString();
+    public static final String newDescriptionClaim = "Description"+ faker.rickAndMorty().toString();
     public static final String executor = "Ivanov Ivan Ivanovich";
-    public static final String commentClaim = "comment_"+ faker.number().numberBetween(1, 9999);
+    public static final String commentClaim = "Comment_"+ faker.number().numberBetween(1, 9999);
     public static final String commentClaimEditind = "Comment_"+ faker.number().numberBetween(1, 9999);
 
 
+/*    Страница о приложении   */
 
+    public static final String urlPrivacyPolicy = "https://vhospice.org/#/privacy-policy/";
+    public static final String urlTermsOfUse = "https://vhospice.org/#/terms-of-use";
 
+    /* Данные для создания новостей    */
 
+    public static final String categoryFirst = "Объявление";
+    public static final String categorySecond = "День рождения";
+    public static final String categoryThird = "Зарплата";
+    public static final String categoryForth= "Профсоюз";
+    public static final String categoryFifth = "Праздник";
+    public static final String categorySixth = "Массаж";
+    public static final String categorySeventh = "Благодарность";
+    public static final String categoryEighth = "Нужна помощь";
+    public static final String tittleNews = "Tittle_"+ faker.number().numberBetween(1, 9999999);
+    public static final String dateNews = formatterDate.format(date);
+    public static final String dateNewsNextDay = formatterDate.format(date.plusDays(1));
+    public static final String dateNewsPreviousDay = formatterDate.format(date.minusDays(1));
+    public static final String timeNews = formatterTime.format(date);
+    public static final String descriptionNews = "Description"+ faker.simpsons().toString();
 }
