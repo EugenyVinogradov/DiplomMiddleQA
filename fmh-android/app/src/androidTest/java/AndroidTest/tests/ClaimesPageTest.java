@@ -93,7 +93,8 @@ import ru.iteco.fmhandroid.ui.AppActivity;
 public class ClaimesPageTest {
 
   @Before
-  public void login() {
+  public void login() throws InterruptedException {
+    sleep(2000);
     successLogin();
     goToClaimesPage();
   }
@@ -241,8 +242,9 @@ public class ClaimesPageTest {
     addNewClime(tittleClaim, dateClaim, timeClaim, descriptionClaim);
     scrollAndClickToClaimWithTittle(tittleClaim);
     changeStatusToInProgress();
+//    sleep(3000);
     filterClimes(false, true, false, false);
-    sleep(5000);
+//    sleep(5000);
     scrollAndClickToClaimWithTittle(tittleClaim);
     onView(withId(R.id.status_label_text_view)).check(matches(allOf(isDisplayed(), withText(R.string.in_progress))));
   }
@@ -253,6 +255,7 @@ public class ClaimesPageTest {
     addNewClime(tittleClaim, dateClaim, timeClaim, descriptionClaim);
     scrollAndClickToClaimWithTittle(tittleClaim);
     changeStatusToInCanceled();
+    sleep(3000);
     filterClimes(false, false, false, true);
     sleep(5000);
     scrollAndClickToClaimWithTittle(tittleClaim);
@@ -265,7 +268,7 @@ public class ClaimesPageTest {
     addNewClime(tittleClaim, dateClaim, timeClaim, descriptionClaim);
     scrollAndClickToClaimWithTittle(tittleClaim);
     changeStatusToInProgress();
-    sleep(5000);
+    sleep(3000);
     scrollAndClickToClaimWithTittle(tittleClaim);
     changeStatusToInExecuted();
     filterClimes(false, false, true, false);
@@ -363,6 +366,7 @@ public class ClaimesPageTest {
   @DisplayName("Отмена добавления комментария к заявке заполнением поля ввода символами при нажатии кнопки Назад")
   public void testCancelAddingNewCommentToClaimWithPressBack() throws InterruptedException {
     addNewClime(tittleClaim, dateClaim, timeClaim, descriptionClaim);
+
     scrollAndClickToClaimWithTittle(tittleClaim);
     cancelAddingNewCommentWhenPressedBack(commentClaim);
     onView(allOf(withId(R.id.comment_description_text_view))).check(doesNotExist());
@@ -473,5 +477,6 @@ public class ClaimesPageTest {
     onView(withText(timeClaim)).check(matches(isDisplayed()));
     onView(withText(descriptionClaim)).check(matches(isDisplayed()));
   }
+
 }
 

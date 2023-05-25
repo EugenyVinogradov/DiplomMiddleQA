@@ -1,9 +1,16 @@
 package AndroidTest.data;
 
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
+
+import static AndroidTest.data.DataHelper.getStringFromResource;
+
 import net.datafaker.Faker;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+
+import ru.iteco.fmhandroid.R;
 
 public class Data {
     private static Faker faker = new Faker();
@@ -54,9 +61,14 @@ public class Data {
     public static final String categorySeventh = "Благодарность";
     public static final String categoryEighth = "Нужна помощь";
     public static final String tittleNews = "Tittle_"+ faker.number().numberBetween(1, 9999999);
+    public static final String newTittleNews = "NewTittle_"+ faker.number().numberBetween(1, 9999999);
     public static final String dateNews = formatterDate.format(date);
     public static final String dateNewsNextDay = formatterDate.format(date.plusDays(1));
     public static final String dateNewsPreviousDay = formatterDate.format(date.minusDays(1));
     public static final String timeNews = formatterTime.format(date);
+    public static final String newTimeNews = formatterTime.format(date.plusHours(1));
     public static final String descriptionNews = "Description"+ faker.simpsons().toString();
+    public static final String newDescriptionNews = "NewDescription"+ faker.simpsons().toString();
+    public static final String statusActive = getStringFromResource(R.string.news_control_panel_active);
+    public static final String statusNotActive = getStringFromResource(R.string.news_control_panel_not_active);
 }

@@ -38,6 +38,10 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import static AndroidTest.data.DataHelper.RecyclerViewMatcher.withRecyclerView;
+import static AndroidTest.pages.AuthPage.successLogin;
+import static AndroidTest.pages.MainPage.goToNewsPage;
+import static AndroidTest.pages.MainPage.logOut;
+import static AndroidTest.pages.NewsPage.goToNewsEditingPage;
 
 import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
@@ -66,6 +70,7 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.StringDescription;
 import org.hamcrest.TypeSafeMatcher;
+import org.junit.After;
 
 import AndroidTest.pages.AuthPage;
 import ru.iteco.fmhandroid.R;
@@ -607,6 +612,32 @@ public class DataHelper {
                 }
             }
         };
+    }
+    public static ViewAction clickChildViewWithId(final int id) {
+        return new ViewAction() {
+            @Override
+            public Matcher<View> getConstraints() {
+                return allOf(isAssignableFrom(ViewGroup.class), isDisplayed());
+            }
+
+            @Override
+            public String getDescription() {
+                return "click child view with id " + id;
+            }
+
+            @Override
+            public void perform(UiController uiController, View view) {
+                View childView = view.findViewById(id);
+                childView.performClick();
+            }
+        };
+    }
+
+    public static void logOutAndLogIn() {
+        logOut();
+        successLogin();
+        goToNewsPage();
+        goToNewsEditingPage();
     }
 
 }

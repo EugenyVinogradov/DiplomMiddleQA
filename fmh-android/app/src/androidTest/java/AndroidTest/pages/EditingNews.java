@@ -1,22 +1,23 @@
 package AndroidTest.pages;
 
-
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.replaceText;
+import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 import static org.hamcrest.CoreMatchers.allOf;
-import static java.lang.Thread.sleep;
+import static AndroidTest.data.DataHelper.clickChildViewWithId;
 import static AndroidTest.data.DataHelper.waitElement;
-import static AndroidTest.pages.NewsEditingPage.addNewsButton;
+import static AndroidTest.pages.NewsEditingPage.editNews;
+import static AndroidTest.pages.NewsEditingPage.scrollAndClickToNewsWithTittle;
 
 import androidx.test.espresso.ViewInteraction;
 
 import ru.iteco.fmhandroid.R;
 
-public class AddingNewsPage {
+public class EditingNews {
 
   public static ViewInteraction categoryField = onView(withId(R.id.news_item_category_text_auto_complete_text_view));
   public static ViewInteraction tittleField = onView(withId(R.id.news_item_title_text_input_edit_text));
@@ -26,28 +27,15 @@ public class AddingNewsPage {
   public static ViewInteraction statusSwitcher = onView(withId(R.id.switcher));
   public static ViewInteraction saveButton = onView(withId(R.id.save_button));
   public static ViewInteraction cancelButton = onView(withId(R.id.cancel_button));
-  public static ViewInteraction confirmCancelAddingNewsButton = onView(allOf(withId(android.R.id.button1)));
-  public static ViewInteraction cancelMessage = onView(withText(R.string.cancellation));
-  public static ViewInteraction confirmDeleteNewsButton = onView(allOf(withId(android.R.id.button1)));
 
 
-
-  public static void fillingNewsFields (String category, String tittle, String date, String time, String description) {
-    addNewsButton.perform(click());
-    categoryField.perform(replaceText(category));
-    tittleField.perform(replaceText(tittle));
-    dateField.perform(replaceText(date));
-    timeField.perform(replaceText(time));
-    descriptionField.perform(replaceText(description));
-  }
-
-  public static void addNews (String category, String tittle, String date, String time, String description) throws InterruptedException {
-    fillingNewsFields (category, tittle, date, time, description);
+  public static void changeNewsAttribute (String newTittle, String newDate,
+                                          String newTime, String newDescription) {
+    tittleField.perform(replaceText(newTittle));
+    dateField.perform(replaceText(newDate));
+    timeField.perform(replaceText(newTime));
+    descriptionField.perform(replaceText(newDescription));
     saveButton.perform(click());
-    sleep(1000);
-  }
-  public static void confirmDelete () {
-    waitElement(android.R.id.button1);
-    confirmDeleteNewsButton.perform(click());
+    waitElement(R.id.news_list_recycler_view);
   }
 }

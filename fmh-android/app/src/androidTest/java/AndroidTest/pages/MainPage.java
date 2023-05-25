@@ -13,6 +13,7 @@ import static org.hamcrest.CoreMatchers.allOf;
 import static java.lang.Thread.sleep;
 import static AndroidTest.data.DataHelper.waitElement;
 import static AndroidTest.pages.ClimesPage.fillingFieldsNewClime;
+import static AndroidTest.pages.ClimesPage.listClaimsId;
 import static AndroidTest.pages.NewClaimPage.saveButton;
 
 import androidx.test.espresso.ViewInteraction;
@@ -52,6 +53,7 @@ public class MainPage {
     public static void goToClaimesPage () {
         waitElement(allClimesButtonId);
         allClimesButton.perform(click());
+        waitElement(listClaimsId);
     }
     public static void goToClaimesPageByNavigationMenu () {
         waitElement(mainMenuButtonId);

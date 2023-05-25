@@ -142,7 +142,7 @@ public class MainPageTest {
 
   @Test
   @DisplayName("Создание Заявки с помощью кнопки на главной странице")
-  public void createNewClaimWithButtonOnMainPage() {
+  public void createNewClaimWithButtonOnMainPage() throws InterruptedException {
     addNewClaim(tittleClaim, dateClaim, timeClaim, descriptionClaim);
     goToClaimesPage();
     isClaimExistWithParams(tittleClaim, dateClaim, timeClaim, descriptionClaim);

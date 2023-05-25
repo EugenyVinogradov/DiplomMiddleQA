@@ -20,5 +20,7 @@ public class FilterNews {
   public static ViewInteraction dateEndPublish = onView(withId(R.id.news_item_publish_date_end_text_input_edit_text));
   public static ViewInteraction filterButton = onView(withId(R.id.filter_button));
   public static ViewInteraction cancelButton = onView(withId(R.id.cancel_button));
+  public static ViewInteraction checkboxActive = onView(withId(R.id.filter_news_active_material_check_box));
+  public static ViewInteraction checkboxNotActive = onView(withId(R.id.filter_news_inactive_material_check_box));
 
 }

@@ -45,6 +45,10 @@ public class ClimesPage {
   public static ViewInteraction newClimeButton = onView(withId(R.id.add_new_claim_material_button));
   public static ViewInteraction filterClimesButton = onView(withId(R.id.filters_material_button));
   public static int filterClimesButtonID = R.id.filters_material_button;
+  public  static int listClaimsId = R.id.claim_list_recycler_view;
+
+  public static ActivityScenarioRule<AppActivity> myActivityScenarioRule =
+      new ActivityScenarioRule<>(AppActivity.class);
 
   public static void fillingFieldsNewClime(String tittle, String date, String time, String description) {
     tittleField.perform(replaceText(tittle));
@@ -53,7 +57,7 @@ public class ClimesPage {
     descriptionField.perform(replaceText(description));
     ViewActions.closeSoftKeyboard();
   }
-  public static void isClaimExistWithParams(String tittle, String date, String time, String description) {
+  public static void isClaimExistWithParams(String tittle, String date, String time, String description) throws InterruptedException {
     scrollAndClickToClaimWithTittle(tittle);
     onView(withId(R.id.title_text_view)).check(matches(withText(tittle)));
     onView(withId(R.id.plane_date_text_view)).check(matches(withText(date)));
@@ -85,17 +89,11 @@ public class ClimesPage {
         .perform(RecyclerViewActions.scrollToPosition(0));
     onView(withId(R.id.claim_list_recycler_view))
         .check(matches(isDisplayed()));
-    final int[] itemCount = new int[1];
-    myActivityScenarioRule.getScenario().onActivity(activity -> {
-      RecyclerView recyclerView = activity.findViewById(R.id.claim_list_recycler_view);
-      itemCount[0] = recyclerView.getAdapter().getItemCount();
-    });
-    for (int i = 0; i < itemCount[0]; i++) {
+    final int itemCount = getClaimsCount(myActivityScenarioRule);
+
+    for (int i = 0; i < itemCount; i++) {
       waitDisplayed(R.id.claim_list_recycler_view, 5000);
-      sleep(500);
-      onView(withId(R.id.claim_list_recycler_view))
-          .perform(actionOnItemAtPosition(i, scrollTo()))
-          .perform(actionOnItemAtPosition(i, click()));
+      scrollToPositionClaim(itemCount);
       sleep(500);
       waitDisplayed(R.id.status_label_text_view, 15000);
       if (!open && !inProgress && !executed && !cancelled) {
@@ -173,11 +171,13 @@ public class ClimesPage {
       Espresso.pressBack();
     }
   }
-  public static void scrollAndClickToClaimWithTittle (String tittle) {
+  public static void scrollAndClickToClaimWithTittle (String tittle) throws InterruptedException {
     waitElement(R.id.claim_list_recycler_view);
+    sleep(500);
     onView(withId(R.id.claim_list_recycler_view))
         .check(matches(isDisplayed()))
         .perform(RecyclerViewActions.scrollTo(hasDescendant(allOf(withText(tittle)))));
+    sleep(500);
     onView(withId(R.id.claim_list_recycler_view))
         .check(matches(isDisplayed()))
         .perform(actionOnItem(hasDescendant(withText(tittle)), click()));
@@ -205,6 +205,21 @@ public class ClimesPage {
     fillingFieldsNewClime(tittle, date, time, description);
     Espresso.pressBack();
   }
+  public static void scrollToPositionClaim (int itemCount) {
+      onView(withId(R.id.claim_list_recycler_view))
+          .perform(actionOnItemAtPosition(itemCount, scrollTo()))
+          .perform(actionOnItemAtPosition(itemCount, click()));
+
+  }
+  public static int getClaimsCount(ActivityScenarioRule<AppActivity> myActivityScenarioRule) {
+    final int[] itemCount = new int[1];
+    myActivityScenarioRule.getScenario().onActivity(activity -> {
+      RecyclerView recyclerView = activity.findViewById(R.id.claim_list_recycler_view);
+      itemCount[0] = recyclerView.getAdapter().getItemCount();
+    });
+    return itemCount[0];
+  }
+
 }
 
 
