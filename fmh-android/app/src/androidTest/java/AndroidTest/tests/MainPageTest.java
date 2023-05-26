@@ -3,7 +3,6 @@ package AndroidTest.tests;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static java.lang.Thread.sleep;
 import static AndroidTest.data.Data.dateClaim;
 import static AndroidTest.data.Data.descriptionClaim;
 import static AndroidTest.data.Data.timeClaim;
@@ -29,31 +28,34 @@ import static AndroidTest.pages.MainPage.mainMenuButton;
 import static AndroidTest.pages.MainPage.newsButton;
 import static AndroidTest.pages.NewsPage.editNewsButton;
 import static AndroidTest.pages.QuotesPage.header;
+
 import androidx.test.espresso.Espresso;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
 import io.qameta.allure.android.runners.AllureAndroidJUnit4;
 import io.qameta.allure.kotlin.junit4.DisplayName;
 import ru.iteco.fmhandroid.ui.AppActivity;
 
-//@RunWith(AndroidJUnit4.class)
+
 @RunWith(AllureAndroidJUnit4.class)
 
 public class MainPageTest {
 
-    @Before
-    public void login() {
-        successLogin();
-    }
+  @Before
+  public void login() {
+    successLogin();
+  }
 
-    @After
-    public void logOutApp() {
-        logOut();
-    }
+  @After
+  public void logOutApp() {
+    logOut();
+  }
 
   @Rule
   public ActivityScenarioRule<AppActivity> mActivityScenarioRule =

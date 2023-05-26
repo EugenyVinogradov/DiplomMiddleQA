@@ -7,6 +7,7 @@ plugins {
     id 'kotlin-parcelize'
     id 'androidx.navigation.safeargs.kotlin'
     id 'com.google.firebase.crashlytics'
+    id 'io.qameta.allure' version '2.10.0'
 }
 
 android {
@@ -126,9 +127,9 @@ dependencies {
     androidTestImplementation 'androidx.test:runner:1.4.0'
     androidTestImplementation 'androidx.test:rules:1.4.0'
     androidTestImplementation 'org.hamcrest:hamcrest:2.2'
-//    androidTestImplementation 'org.hamcrest:hamcrest-library:2.2'
-
     androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
+
+
 
 
 

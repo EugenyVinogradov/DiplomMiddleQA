@@ -59,6 +59,7 @@ public class QuotesPageTest {
     recyclerView.perform(new DataHelper.GetHeightAfterClickViewAction(heightAfterClick));
     Assert.assertTrue(heightBeforeClick[0] < heightAfterClick[0]);
   }
+
   @Test
   @DisplayName("Свернуть цитату")
   public void testCollapseNews() {
@@ -69,8 +70,8 @@ public class QuotesPageTest {
     recyclerView.perform(actionOnItemAtPosition(0, doubleClick()));
     int[] heightAfterClick = {0};
     recyclerView.perform(new DataHelper.GetHeightAfterClickViewAction(heightAfterClick));
-    Log.d(TAG, "before " +heightBeforeClick[0]);
-    Log.d(TAG, "After " +heightAfterClick[0]);
-    Assert.assertEquals(heightBeforeClick[0] , heightAfterClick[0]);
+    Log.d(TAG, "before " + heightBeforeClick[0]);
+    Log.d(TAG, "After " + heightAfterClick[0]);
+    Assert.assertEquals(heightBeforeClick[0], heightAfterClick[0]);
   }
 }

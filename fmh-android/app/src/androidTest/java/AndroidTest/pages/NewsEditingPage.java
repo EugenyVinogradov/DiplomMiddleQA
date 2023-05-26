@@ -2,7 +2,6 @@ package AndroidTest.pages;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.contrib.RecyclerViewActions.actionOnItem;
@@ -14,8 +13,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 import static org.hamcrest.CoreMatchers.allOf;
-import static java.lang.Thread.sleep;
-import static AndroidTest.data.Data.tittleNews;
 import static AndroidTest.data.DataHelper.clickChildViewWithId;
 import static AndroidTest.data.DataHelper.waitElement;
 import static AndroidTest.pages.AddingNewsPage.confirmDelete;
@@ -27,7 +24,7 @@ import androidx.test.espresso.contrib.RecyclerViewActions;
 
 import ru.iteco.fmhandroid.R;
 
-public class NewsEditingPage extends NewsPage{
+public class NewsEditingPage extends NewsPage {
 
   public static ViewInteraction addNewsButton = onView(withId(R.id.add_news_image_view));
   public static ViewInteraction categoryIconImage = onView(withId(R.id.category_icon_image_view));
@@ -42,14 +39,21 @@ public class NewsEditingPage extends NewsPage{
   public static ViewInteraction descriptionNews = onView(withId(R.id.news_item_description_text_view));
 
 
-
   public static void scrollNews(int i) {
     onView(withId(R.id.news_list_recycler_view))
         .perform(scrollToPosition(i))
         .perform(actionOnItemAtPosition(i, scrollTo()))
         .check(matches(isDisplayed()));
   }
-  public static void scrollAndClickToNewsWithTittle (String tittle) {
+
+  public static void openNews(int i) {
+    onView(withId(R.id.news_list_recycler_view))
+        .perform(scrollToPosition(i))
+        .perform(actionOnItemAtPosition(i, scrollTo()))
+        .perform(clickChildViewWithId(R.id.edit_news_item_image_view));
+  }
+
+  public static void scrollAndClickToNewsWithTittle(String tittle) {
     waitElement(R.id.news_list_recycler_view);
     onView(withId(R.id.news_list_recycler_view))
         .check(matches(isDisplayed()))
@@ -59,19 +63,20 @@ public class NewsEditingPage extends NewsPage{
         .perform(actionOnItem(hasDescendant(withText(tittle)), click()));
   }
 
-  public static void editNews (String tittle) {
+  public static void editNews(String tittle) {
     scrollAndClickToNewsWithTittle(tittle);
     onView(allOf(withId(R.id.news_item_material_card_view), hasDescendant(withText(tittle))))
         .perform(clickChildViewWithId(R.id.edit_news_item_image_view));
   }
 
-  public static void changeNewsStatus (String tittle) {
+  public static void changeNewsStatus(String tittle) {
     scrollAndClickToNewsWithTittle(tittle);
     editNews(tittle);
     statusSwitcher.perform(click());
     saveButton.perform(click());
   }
-  public static void deleteNews (String tittle) {
+
+  public static void deleteNews(String tittle) {
     scrollAndClickToNewsWithTittle(tittle);
     onView(allOf(withId(R.id.news_item_material_card_view), hasDescendant(withText(tittle))))
         .perform(clickChildViewWithId(R.id.delete_news_item_image_view));

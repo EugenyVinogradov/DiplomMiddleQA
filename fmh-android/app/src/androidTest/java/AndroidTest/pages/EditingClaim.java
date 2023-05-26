@@ -8,7 +8,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 import static org.hamcrest.CoreMatchers.allOf;
 import static AndroidTest.data.Data.commentClaim;
-import static AndroidTest.data.Data.tittleClaim;
 import static AndroidTest.pages.MainPage.goToClaimesPage;
 
 import androidx.test.espresso.Espresso;
@@ -95,8 +94,9 @@ public class EditingClaim extends NewClaimPage {
     cancelEditingButton.perform(click());
     confirmCancelEditingButton.perform(click());
   }
+
   public static void fillingFieldsWhenEditingClaimAndPressBack(String newTittle, String newDate,
-                                                                 String newTime, String newDescription) {
+                                                               String newTime, String newDescription) {
     editClaimButton.perform(click());
     tittleEditField.perform(replaceText(newTittle));
     dateEditField.perform(replaceText(newDate));

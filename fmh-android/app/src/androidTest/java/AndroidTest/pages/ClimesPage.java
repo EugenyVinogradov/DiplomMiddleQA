@@ -19,8 +19,7 @@ import static org.hamcrest.Matchers.anyOf;
 import static java.lang.Thread.sleep;
 import static AndroidTest.data.DataHelper.waitDisplayed;
 import static AndroidTest.data.DataHelper.waitElement;
-import static AndroidTest.data.DataHelper.waitUntilVisible;
-import static AndroidTest.pages.MainPage.quotesButton;
+
 import static AndroidTest.pages.NewClaimPage.cancelButton;
 import static AndroidTest.pages.NewClaimPage.confirmCancelButtonOk;
 import static AndroidTest.pages.NewClaimPage.dateField;
@@ -45,10 +44,8 @@ public class ClimesPage {
   public static ViewInteraction newClimeButton = onView(withId(R.id.add_new_claim_material_button));
   public static ViewInteraction filterClimesButton = onView(withId(R.id.filters_material_button));
   public static int filterClimesButtonID = R.id.filters_material_button;
-  public  static int listClaimsId = R.id.claim_list_recycler_view;
+  public static int listClaimsId = R.id.claim_list_recycler_view;
 
-  public static ActivityScenarioRule<AppActivity> myActivityScenarioRule =
-      new ActivityScenarioRule<>(AppActivity.class);
 
   public static void fillingFieldsNewClime(String tittle, String date, String time, String description) {
     tittleField.perform(replaceText(tittle));
@@ -57,6 +54,7 @@ public class ClimesPage {
     descriptionField.perform(replaceText(description));
     ViewActions.closeSoftKeyboard();
   }
+
   public static void isClaimExistWithParams(String tittle, String date, String time, String description) throws InterruptedException {
     scrollAndClickToClaimWithTittle(tittle);
     onView(withId(R.id.title_text_view)).check(matches(withText(tittle)));
@@ -171,7 +169,8 @@ public class ClimesPage {
       Espresso.pressBack();
     }
   }
-  public static void scrollAndClickToClaimWithTittle (String tittle) throws InterruptedException {
+
+  public static void scrollAndClickToClaimWithTittle(String tittle) throws InterruptedException {
     waitElement(R.id.claim_list_recycler_view);
     sleep(500);
     onView(withId(R.id.claim_list_recycler_view))
@@ -182,12 +181,14 @@ public class ClimesPage {
         .check(matches(isDisplayed()))
         .perform(actionOnItem(hasDescendant(withText(tittle)), click()));
   }
-  public static void addNewClime(String tittle, String date, String time, String description) throws InterruptedException {
+
+  public static void addNewClime(String tittle, String date, String time, String description) {
     newClimeButton.perform(click());
     fillingFieldsNewClime(tittle, date, time, description);
     saveButton.perform(click());
     waitElement(R.id.claim_list_recycler_view);
   }
+
   public static void addNewClimeWithoutSomething(String tittle, String date, String time, String description) {
     newClimeButton.perform(click());
     fillingFieldsNewClime(tittle, date, time, description);
@@ -200,17 +201,20 @@ public class ClimesPage {
     cancelButton.perform(click());
     confirmCancelButtonOk.perform(click());
   }
+
   public static void cancelAddingNewClimeWhenPressedBack(String tittle, String date, String time, String description) {
     newClimeButton.perform(click());
     fillingFieldsNewClime(tittle, date, time, description);
     Espresso.pressBack();
   }
-  public static void scrollToPositionClaim (int itemCount) {
-      onView(withId(R.id.claim_list_recycler_view))
-          .perform(actionOnItemAtPosition(itemCount, scrollTo()))
-          .perform(actionOnItemAtPosition(itemCount, click()));
+
+  public static void scrollToPositionClaim(int itemCount) {
+    onView(withId(R.id.claim_list_recycler_view))
+        .perform(actionOnItemAtPosition(itemCount, scrollTo()))
+        .perform(actionOnItemAtPosition(itemCount, click()));
 
   }
+
   public static int getClaimsCount(ActivityScenarioRule<AppActivity> myActivityScenarioRule) {
     final int[] itemCount = new int[1];
     myActivityScenarioRule.getScenario().onActivity(activity -> {

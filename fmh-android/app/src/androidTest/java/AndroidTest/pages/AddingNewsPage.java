@@ -31,8 +31,7 @@ public class AddingNewsPage {
   public static ViewInteraction confirmDeleteNewsButton = onView(allOf(withId(android.R.id.button1)));
 
 
-
-  public static void fillingNewsFields (String category, String tittle, String date, String time, String description) {
+  public static void fillingNewsFields(String category, String tittle, String date, String time, String description) {
     addNewsButton.perform(click());
     categoryField.perform(replaceText(category));
     tittleField.perform(replaceText(tittle));
@@ -41,12 +40,13 @@ public class AddingNewsPage {
     descriptionField.perform(replaceText(description));
   }
 
-  public static void addNews (String category, String tittle, String date, String time, String description) throws InterruptedException {
-    fillingNewsFields (category, tittle, date, time, description);
+  public static void addNews(String category, String tittle, String date, String time, String description) throws InterruptedException {
+    fillingNewsFields(category, tittle, date, time, description);
     saveButton.perform(click());
     sleep(1000);
   }
-  public static void confirmDelete () {
+
+  public static void confirmDelete() {
     waitElement(android.R.id.button1);
     confirmDeleteNewsButton.perform(click());
   }

@@ -3,11 +3,8 @@ package AndroidTest.tests;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.CoreMatchers.allOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static java.lang.Thread.sleep;
@@ -22,24 +19,17 @@ import static AndroidTest.data.Data.statusActive;
 import static AndroidTest.data.Data.statusNotActive;
 import static AndroidTest.data.Data.timeNews;
 import static AndroidTest.data.Data.tittleNews;
-import static AndroidTest.data.DataHelper.clickChildViewWithId;
 import static AndroidTest.data.DataHelper.getRecyclerViewItemCount;
 import static AndroidTest.data.DataHelper.getTextFromNews;
-import static AndroidTest.data.DataHelper.logOutAndLogIn;
 import static AndroidTest.data.DataHelper.waitElement;
 import static AndroidTest.data.DataHelper.waitUntilVisible;
 import static AndroidTest.pages.AddingNewsPage.addNews;
 import static AndroidTest.pages.AddingNewsPage.cancelButton;
 import static AndroidTest.pages.AddingNewsPage.cancelMessage;
 import static AndroidTest.pages.AddingNewsPage.confirmCancelAddingNewsButton;
-import static AndroidTest.pages.AddingNewsPage.confirmDelete;
-import static AndroidTest.pages.AddingNewsPage.confirmDeleteNewsButton;
 import static AndroidTest.pages.AddingNewsPage.fillingNewsFields;
 import static AndroidTest.pages.AuthPage.successLogin;
 import static AndroidTest.pages.EditingNews.changeNewsAttribute;
-import static AndroidTest.pages.EditingNews.saveButton;
-import static AndroidTest.pages.EditingNews.statusSwitcher;
-import static AndroidTest.pages.MainPage.goToAboutPage;
 import static AndroidTest.pages.MainPage.goToNewsPage;
 import static AndroidTest.pages.MainPage.logOut;
 import static AndroidTest.pages.NewClaimPage.errorAddingMessageId;
@@ -48,7 +38,6 @@ import static AndroidTest.pages.NewsEditingPage.deleteNews;
 import static AndroidTest.pages.NewsEditingPage.editNews;
 import static AndroidTest.pages.NewsEditingPage.scrollAndClickToNewsWithTittle;
 import static AndroidTest.pages.NewsEditingPage.scrollNews;
-import static AndroidTest.pages.NewsPage.filterNewsByDate;
 import static AndroidTest.pages.NewsPage.filterNewsByStatus;
 import static AndroidTest.pages.NewsPage.filterNewsByStatusAndDate;
 import static AndroidTest.pages.NewsPage.getNewsCount;
@@ -56,12 +45,7 @@ import static AndroidTest.pages.NewsPage.goToNewsEditingPage;
 import static AndroidTest.pages.NewsPage.scrollNewsToPosition;
 import static AndroidTest.pages.NewsPage.sortingNews;
 
-import android.view.View;
-
 import androidx.test.espresso.Espresso;
-import androidx.test.espresso.ViewInteraction;
-import androidx.test.espresso.contrib.RecyclerViewActions;
-import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 
 import org.junit.After;
@@ -110,6 +94,7 @@ public class NewsEditingPageTest {
     assertEquals(firstDateBeforeSorting, lastDateAfterSorting);
     assertEquals(lastDateBeforeSorting, firstDateAfterSorting);
   }
+
   @Test
   @DisplayName("Добавление новости")
   public void testAddingNews() throws InterruptedException {
@@ -119,7 +104,7 @@ public class NewsEditingPageTest {
     onView(withText(tittleNews)).check(matches(isDisplayed()));
     onView(withText(dateNews)).check(matches(isDisplayed()));
     onView(withText(timeNews)).check(matches(isDisplayed()));
-    onView( withText(descriptionNews)).check(matches(isDisplayed()));
+    onView(withText(descriptionNews)).check(matches(isDisplayed()));
     Espresso.pressBack();
   }
 
@@ -134,6 +119,7 @@ public class NewsEditingPageTest {
       assertEquals(statusActive, actualStatus);
     }
   }
+
   @Test
   @DisplayName("Фильтрация новостей по статусу Неактивна")
   public void testFilterNewsByStatusNotActive() {
@@ -145,6 +131,7 @@ public class NewsEditingPageTest {
       assertEquals(statusNotActive, actualStatus);
     }
   }
+
   @Test
   @DisplayName("Фильтрация новостей по статусу Активна и дате публикации")
   public void testFilterNewsByStatusActiveAndDatePublish() throws InterruptedException {
@@ -159,6 +146,7 @@ public class NewsEditingPageTest {
       assertEquals(dateNews, actualDate);
     }
   }
+
   @Test
   @DisplayName("Смена статуса новости")
   public void testChangeNewsStatus() throws InterruptedException {
@@ -167,6 +155,7 @@ public class NewsEditingPageTest {
     editNews(tittleNews);
     onView(withText(statusNotActive)).check(matches(isDisplayed()));
   }
+
   @Test
   @DisplayName("Фильтрация новостей по статусу Неактивна и дате публикации")
   public void testFilterNewsByStatusNotActiveAndDatePublish() throws InterruptedException {
@@ -182,6 +171,7 @@ public class NewsEditingPageTest {
       assertEquals(dateNews, actualDate);
     }
   }
+
   @Test
   @DisplayName("Отказ в добавление новости при незаполненном поле Категория")
   public void testRefusalAddingNewsWithEmptyFieldCategory() throws InterruptedException {
@@ -189,6 +179,7 @@ public class NewsEditingPageTest {
     waitUntilVisible(DataHelper.checkToast(errorAddingMessageId, true));
     Espresso.pressBack();
   }
+
   @Test
   @DisplayName("Отказ в добавление новости при незаполненном поле Заголовок")
   public void testRefusalAddingNewsWithEmptyFieldTittle() throws InterruptedException {
@@ -196,6 +187,7 @@ public class NewsEditingPageTest {
     waitUntilVisible(DataHelper.checkToast(errorAddingMessageId, true));
     Espresso.pressBack();
   }
+
   @Test
   @DisplayName("Отказ в добавление новости при незаполненном поле Дата")
   public void testRefusalAddingNewsWithEmptyFieldDate() throws InterruptedException {
@@ -203,6 +195,7 @@ public class NewsEditingPageTest {
     waitUntilVisible(DataHelper.checkToast(errorAddingMessageId, true));
     Espresso.pressBack();
   }
+
   @Test
   @DisplayName("Отказ в добавление новости при незаполненном поле Время")
   public void testRefusalAddingNewsWithEmptyFieldTime() throws InterruptedException {
@@ -210,6 +203,7 @@ public class NewsEditingPageTest {
     waitUntilVisible(DataHelper.checkToast(errorAddingMessageId, true));
     Espresso.pressBack();
   }
+
   @Test
   @DisplayName("Отказ в добавление новости при незаполненном поле Описание")
   public void testRefusalAddingNewsWithEmptyFieldDescription() throws InterruptedException {
@@ -217,6 +211,7 @@ public class NewsEditingPageTest {
     waitUntilVisible(DataHelper.checkToast(errorAddingMessageId, true));
     Espresso.pressBack();
   }
+
   @Test
   @DisplayName("Отмена добавление новости при нажатии кнопки Отмена")
   public void testCancelAddingNewsWithPressCancel() {
@@ -226,6 +221,7 @@ public class NewsEditingPageTest {
     confirmCancelAddingNewsButton.perform(click());
     Espresso.pressBack();
   }
+
   @Test
   @DisplayName("Отмена добавление новости при нажатии кнопки Назад")
   public void testCancelAddingNewsWithPressBack() {
@@ -238,6 +234,7 @@ public class NewsEditingPageTest {
       assertNotEquals(tittleNews, actualTittle);
     }
   }
+
   @Test
   @DisplayName("Удаление новости")
   public void testDeleteNews() throws InterruptedException {
@@ -252,18 +249,18 @@ public class NewsEditingPageTest {
       assertNotEquals(tittleNews, actualTittle);
     }
   }
+
   @Test
   @DisplayName("Редактирование атрибутов новости")
   public void testChangeNewsAttribute() throws InterruptedException {
     addNews(categoryForth, tittleNews, dateNews, timeNews, descriptionNews);
-    logOutAndLogIn();
     editNews(tittleNews);
-    changeNewsAttribute(newTittleNews, dateNewsNextDay,newTimeNews,newDescriptionNews);
+    changeNewsAttribute(newTittleNews, dateNewsNextDay, newTimeNews, newDescriptionNews);
     editNews(newTittleNews);
     onView(withText(newTittleNews)).check(matches(isDisplayed()));
     onView(withText(dateNewsNextDay)).check(matches(isDisplayed()));
     onView(withText(newTimeNews)).check(matches(isDisplayed()));
-    onView( withText(newDescriptionNews)).check(matches(isDisplayed()));
+    onView(withText(newDescriptionNews)).check(matches(isDisplayed()));
     Espresso.pressBack();
   }
 }

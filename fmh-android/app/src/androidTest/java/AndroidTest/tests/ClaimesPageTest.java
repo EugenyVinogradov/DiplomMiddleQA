@@ -1,9 +1,8 @@
 package AndroidTest.tests;
 
-import static android.app.PendingIntent.getActivity;
+
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
@@ -11,15 +10,9 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.CoreMatchers.allOf;
-import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.Matchers.anyOf;
-import static org.hamcrest.Matchers.hasToString;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 import static java.lang.Thread.sleep;
+import static AndroidTest.Steps.AllureSteps.scrollToClaimWithTrimmedTittleAndClick;
 import static AndroidTest.data.Data.commentClaim;
 import static AndroidTest.data.Data.commentClaimEditind;
 import static AndroidTest.data.Data.dateClaim;
@@ -49,24 +42,17 @@ import static AndroidTest.pages.CommentPage.cancelAddingNewCommentWhenPressedBac
 import static AndroidTest.pages.CommentPage.cancelAddingNewCommentWhenPressedCancel;
 import static AndroidTest.pages.CommentPage.cancelУEditCommentWhenPressedBack;
 import static AndroidTest.pages.CommentPage.cancelУEditCommentWhenPressedCancel;
-import static AndroidTest.pages.CommentPage.commentSaveButton;
-import static AndroidTest.pages.CommentPage.commentText;
 import static AndroidTest.pages.CommentPage.editComment;
 import static AndroidTest.pages.EditingClaim.changeStatusToInCanceled;
 import static AndroidTest.pages.EditingClaim.changeStatusToInExecuted;
 import static AndroidTest.pages.EditingClaim.changeStatusToInProgress;
 import static AndroidTest.pages.EditingClaim.closeButton;
-import static AndroidTest.pages.EditingClaim.commentField;
-import static AndroidTest.pages.EditingClaim.editClaimButton;
-import static AndroidTest.pages.EditingClaim.editCommentButton;
 import static AndroidTest.pages.EditingClaim.editingDateClaim;
 import static AndroidTest.pages.EditingClaim.editingDescriptionClaim;
 import static AndroidTest.pages.EditingClaim.editingTimeClaim;
 import static AndroidTest.pages.EditingClaim.editingTittleClaim;
 import static AndroidTest.pages.EditingClaim.fillingFieldsWhenEditingClaimAndPressBack;
 import static AndroidTest.pages.EditingClaim.fillingFieldsWhenEditingClaimAndPressCancel;
-import static AndroidTest.pages.EditingClaim.saveEditingButton;
-import static AndroidTest.pages.EditingClaim.tittleEditField;
 import static AndroidTest.pages.MainPage.goToClaimesPage;
 import static AndroidTest.pages.MainPage.logOut;
 import static AndroidTest.pages.NewClaimPage.errorWithAddingNewClaimWithoutSomeParameters;
@@ -76,11 +62,13 @@ import androidx.test.espresso.Espresso;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import AndroidTest.Steps.AllureSteps;
 import AndroidTest.data.DataHelper;
 import io.qameta.allure.android.runners.AllureAndroidJUnit4;
 import io.qameta.allure.kotlin.junit4.DisplayName;
@@ -88,13 +76,11 @@ import ru.iteco.fmhandroid.R;
 import ru.iteco.fmhandroid.ui.AppActivity;
 
 
-//@RunWith(AndroidJUnit4.class)
 @RunWith(AllureAndroidJUnit4.class)
 public class ClaimesPageTest {
 
   @Before
-  public void login() throws InterruptedException {
-    sleep(2000);
+  public void login() {
     successLogin();
     goToClaimesPage();
   }
@@ -207,188 +193,193 @@ public class ClaimesPageTest {
   @Test
   @DisplayName("Фильтрация заявок - без статусов")
   public void testAllItemsWithoutStatus() throws InterruptedException {
-    filterClimes(false, false, false, false);
-    checkFilteredClimes(myActivityScenarioRule, false, false, false, false);
+    AllureSteps.filterClimesWithoutStatus();
+    AllureSteps.messageThereIsNothingHereYet(myActivityScenarioRule);
   }
 
   @Test
   @DisplayName("Фильтрация заявок - статус 'Открыта'")
   public void testAllItemsHaveOpenStatus() throws InterruptedException {
-    addNewClime(tittleClaim, dateClaim, timeClaim, descriptionClaim);
-    filterClimes(true, false, false, false);
-    scrollAndClickToClaimWithTittle(tittleClaim);
-    onView(withId(R.id.status_label_text_view)).check(matches(allOf(isDisplayed(), withText(R.string.status_open))));
+    AllureSteps.addClaim();
+    AllureSteps.filterClimesWithStatusOpen();
+    AllureSteps.scrollToClaimWithTittleAndClick();
+    AllureSteps.checkClaimWithStatusOpen();
   }
 
   @Test
   @DisplayName("Отмена создания новой заявки при нажатии кнопки 'Cancel'")
-  public void testNotCreatingNewClaimWhenPressingCancelButton() throws InterruptedException {
-    cancelAddingNewClimeWhenPressedCancel(tittleClaim, dateClaim, timeClaim, descriptionClaim);
-    onView(withId(R.id.claim_list_recycler_view))
-        .check(matches(not(hasDescendant(withText(tittleClaim)))));
+  public void testNotCreatingNewClaimWhenPressingCancelButton() {
+    AllureSteps.fillingFieldsNewClimeAndPressCancel();
+    AllureSteps.checkNotExistNewClaim();
   }
 
   @Test
   @DisplayName("Отмена создания новой заявки при нажатии системной кнопки 'Назад'")
-  public void testNotCreatingNewClaimWhenPressingBackButton() throws InterruptedException {
-    cancelAddingNewClimeWhenPressedBack(tittleClaim, dateClaim, timeClaim, descriptionClaim);
-    onView(withId(R.id.claim_list_recycler_view))
-        .check(matches(not(hasDescendant(withText(tittleClaim)))));
+  public void testNotCreatingNewClaimWhenPressingBackButton() {
+    AllureSteps.fillingFieldsNewClimeAndPressBack();
+    AllureSteps.checkNotExistNewClaim();
   }
 
   @Test
   @DisplayName("Фильтрация заявок - статус 'В работе'")
   public void testAllItemsHaveInProgressStatus() throws InterruptedException {
-    addNewClime(tittleClaim, dateClaim, timeClaim, descriptionClaim);
-    scrollAndClickToClaimWithTittle(tittleClaim);
-    changeStatusToInProgress();
-//    sleep(3000);
-    filterClimes(false, true, false, false);
-//    sleep(5000);
-    scrollAndClickToClaimWithTittle(tittleClaim);
-    onView(withId(R.id.status_label_text_view)).check(matches(allOf(isDisplayed(), withText(R.string.in_progress))));
+    AllureSteps.addClaim();
+    AllureSteps.scrollToClaimWithTittleAndClick();
+    AllureSteps.changeStatusToInProgress();
+    AllureSteps.filterClimesWithStatusInProgress();
+    AllureSteps.scrollToClaimWithTittleAndClick();
+    AllureSteps.checkClaimWithStatusInProgress();
   }
 
   @Test
   @DisplayName("Фильтрация заявок - статус 'Отменена'")
   public void testAllItemsHaveCanceledStatus() throws InterruptedException {
-    addNewClime(tittleClaim, dateClaim, timeClaim, descriptionClaim);
-    scrollAndClickToClaimWithTittle(tittleClaim);
-    changeStatusToInCanceled();
+    AllureSteps.addClaim();
+    AllureSteps.scrollToClaimWithTittleAndClick();
+    AllureSteps.changeStatusToInCanceled();
     sleep(3000);
-    filterClimes(false, false, false, true);
+    AllureSteps.filterClimesWithStatusCanceled();
     sleep(5000);
-    scrollAndClickToClaimWithTittle(tittleClaim);
-    onView(withId(R.id.status_label_text_view)).check(matches(allOf(isDisplayed(), withText(R.string.status_claim_canceled))));
+    AllureSteps.scrollToClaimWithTittleAndClick();
+    AllureSteps.checkClaimWithStatusCanceled();
   }
 
   @Test
   @DisplayName("Фильтрация заявок - статус 'Исполнена'")
   public void testAllItemsHaveExecutedStatus() throws InterruptedException {
-    addNewClime(tittleClaim, dateClaim, timeClaim, descriptionClaim);
-    scrollAndClickToClaimWithTittle(tittleClaim);
-    changeStatusToInProgress();
+    AllureSteps.addClaim();
+    AllureSteps.scrollToClaimWithTittleAndClick();
+    AllureSteps.changeStatusToInProgress();
     sleep(3000);
-    scrollAndClickToClaimWithTittle(tittleClaim);
-    changeStatusToInExecuted();
-    filterClimes(false, false, true, false);
+    AllureSteps.scrollToClaimWithTittleAndClick();
+    AllureSteps.changeStatusToInExecuted();
+    AllureSteps.filterClimesWithStatusExecuted();
     sleep(5000);
-    scrollAndClickToClaimWithTittle(tittleClaim);
-    onView(withId(R.id.status_label_text_view)).check(matches(allOf(isDisplayed(), withText(R.string.executed))));
+    AllureSteps.scrollToClaimWithTittleAndClick();
+    AllureSteps.checkClaimWithStatusExecuted();
   }
 
   @Test
   @DisplayName("Успешное создание новой заявки с одним символом в поле Тема")
   public void testSuccessCreatedNewClaimWithOneCharterInFieldTittle() throws InterruptedException {
-    addNewClime(tittleClaimOneCharacter, dateClaim, timeClaim, descriptionClaim);
-    scrollAndClickToClaimWithTittle(tittleClaimOneCharacter);
-    onView(withId(R.id.status_label_text_view)).check(matches(allOf(isDisplayed(), withText(R.string.status_open))));
+    AllureSteps.addClaimWithOneCharacterInFieldTittle();
+    AllureSteps.scrollToClaimWithOneCharacterTittleAndClick();
+    AllureSteps.checkClaimWithStatusOpen();
   }
 
   @Test
   @DisplayName("Успешное создание новой заявки с 49 символами в поле Тема")
   public void testSuccessCreatedNewClaimWithFortyNineChartersInFieldTittle() throws InterruptedException {
-    addNewClime(tittleClaimFortyNineCharacter, dateClaim, timeClaim, descriptionClaim);
-    scrollAndClickToClaimWithTittle(tittleClaimFortyNineCharacter);
-    onView(withId(R.id.status_label_text_view)).check(matches(allOf(isDisplayed(), withText(R.string.status_open))));
+    AllureSteps.addClaimWith49CharactersInFieldTittle();
+    AllureSteps.scrollToClaimWith49CharacterTittleAndClick();
+    AllureSteps.checkClaimWithStatusOpen();
   }
 
   @Test
   @DisplayName("Успешное создание новой заявки с 50 символами в поле Тема")
   public void testSuccessCreatedNewClaimWithFiftyChartersInFieldTittle() throws InterruptedException {
-    addNewClime(tittleClaimFiftyCharacter, dateClaim, timeClaim, descriptionClaim);
-    scrollAndClickToClaimWithTittle(tittleClaimFiftyCharacter);
-    onView(withId(R.id.status_label_text_view)).check(matches(allOf(isDisplayed(), withText(R.string.status_open))));
+    AllureSteps.addClaimWith50CharactersInFieldTittle();
+    AllureSteps.scrollToClaimWith50CharacterTittleAndClick();
+    AllureSteps.checkClaimWithStatusOpen();
   }
 
   @Test
   @DisplayName("Обрезание тесктового значения поля Тема до 50 символов и успешное добавление новой заявки")
   public void testSuccessCreatedNewClaimWithFiftyOneChartersInFieldTittle() throws InterruptedException {
-    String Tittle = tittleClaimFiftyOneCharacter.substring(0, 50);
-    addNewClime(tittleClaimFiftyOneCharacter, dateClaim, timeClaim, descriptionClaim);
-    scrollAndClickToClaimWithTittle(Tittle);
-    onView(withId(R.id.status_label_text_view)).check(matches(allOf(isDisplayed(), withText(R.string.status_open))));
+    String expectedTittle = tittleClaimFiftyOneCharacter.substring(0, 50);
+    AllureSteps.addClaimWith51CharactersInFieldTittle();
+    AllureSteps.scrollToClaimWithTrimmedTittleAndClick(expectedTittle);
+    String actualTittle = getTextFromViewInteraction(onView(withId(R.id.title_text_view)));
+    AllureSteps.checkThatTittleTrimmedTo50Characters(expectedTittle, actualTittle);
   }
 
   @Test
   @DisplayName("Отказ в создании новой заявки с незаполненным полем Тема")
   public void testRefusalCreatedNewClaimWithEmptyFieldTittle() {
-    addNewClimeWithoutSomething("", dateClaim, timeClaim, descriptionClaim);
-    errorWithAddingNewClaimWithoutSomeParameters();
+    AllureSteps.addClaimWithEmptyFieldTittle();
+    AllureSteps.checkErrorMessageBySomeParameterEmpty();
   }
 
   @Test
   @DisplayName("Отказ в создании новой заявки с заполнением поля Тема пробелами")
   public void testRefusalCreatedNewClaimWithOnlySpacesInFieldSTittle() {
-    addNewClimeWithoutSomething("   ", dateClaim, timeClaim, descriptionClaim);
-    errorWithAddingNewClaimWithoutSomeParameters();
+    AllureSteps.addClaimWitOnlySpacesInFieldTittle();
+    AllureSteps.checkErrorMessageBySomeParameterEmpty();
   }
 
   @Test
   @DisplayName("Отказ в создании новой заявки с незаполненным полем Дата")
   public void testRefusalCreatedNewClaimWithEmptyFieldDate() {
-    addNewClimeWithoutSomething(tittleClaim, "", timeClaim, descriptionClaim);
-    errorWithAddingNewClaimWithoutSomeParameters();
+    AllureSteps.addClaimWithEmptyFieldDate();
+    AllureSteps.checkErrorMessageBySomeParameterEmpty();
   }
 
   @Test
   @DisplayName("Отказ в создании новой заявки с незаполненным полем Время")
   public void testRefusalCreatedNewClaimWithEmptyFieldTime() {
-    addNewClimeWithoutSomething(tittleClaim, dateClaim, "", descriptionClaim);
-    errorWithAddingNewClaimWithoutSomeParameters();
+    AllureSteps.addClaimWithEmptyFieldTime();
+    AllureSteps.checkErrorMessageBySomeParameterEmpty();
   }
-
+  @Test
+  @DisplayName("Отказ в создании новой заявки с незаполнением поля Описание")
+  public void testRefusalCreatedNewClaimWithEmptyFieldDescription() {
+    AllureSteps.addClaimWithEmptyFieldDescription();
+    AllureSteps.checkErrorMessageBySomeParameterEmpty();
+  }
   @Test
   @DisplayName("Отказ в создании новой заявки с заполнением поля Описание пробелами")
   public void testRefusalCreatedNewClaimWithOnlySpacesInFieldDescription() {
-    addNewClimeWithoutSomething(tittleClaim, dateClaim, timeClaim, "    ");
-    errorWithAddingNewClaimWithoutSomeParameters();
+    AllureSteps.addClaimWithOnlySpacesInFieldDescription();
+    AllureSteps.checkErrorMessageBySomeParameterEmpty();
   }
 
   @Test
   @DisplayName("Успешное добавление комментария к заявке заполнением поля ввода символами")
   public void testSuccessAddingNewCommentToClaim() throws InterruptedException {
-    addNewClime(tittleClaim, dateClaim, timeClaim, descriptionClaim);
-    scrollAndClickToClaimWithTittle(tittleClaim);
-    addNewComment(commentClaim);
-    onView(withText(commentClaim)).check(matches(isDisplayed()));
+    AllureSteps.addClaim();
+    AllureSteps.scrollToClaimWithTittleAndClick();
+    AllureSteps.addNewCommentToClaim();
+    AllureSteps.checkAddingNewComment();
   }
+
   @Test
   @DisplayName("Отмена добавления комментария к заявке заполнением поля ввода символами при нажатии кнопки Отмена")
   public void testCancelAddingNewCommentToClaimWithPressCancel() throws InterruptedException {
-    addNewClime(tittleClaim, dateClaim, timeClaim, descriptionClaim);
-    scrollAndClickToClaimWithTittle(tittleClaim);
-    cancelAddingNewCommentWhenPressedCancel(commentClaim);
-    onView(allOf(withId(R.id.comment_description_text_view))).check(doesNotExist());
-
+    AllureSteps.addClaim();
+    AllureSteps.scrollToClaimWithTittleAndClick();
+    AllureSteps.cancelAddingNewCommentToClaimWithPressCancel();
+    AllureSteps.checkNotAddingNewComment();
   }
+
   @Test
   @DisplayName("Отмена добавления комментария к заявке заполнением поля ввода символами при нажатии кнопки Назад")
   public void testCancelAddingNewCommentToClaimWithPressBack() throws InterruptedException {
-    addNewClime(tittleClaim, dateClaim, timeClaim, descriptionClaim);
-
-    scrollAndClickToClaimWithTittle(tittleClaim);
-    cancelAddingNewCommentWhenPressedBack(commentClaim);
-    onView(allOf(withId(R.id.comment_description_text_view))).check(doesNotExist());
+    AllureSteps.addClaim();
+    AllureSteps.scrollToClaimWithTittleAndClick();
+    AllureSteps.cancelAddingNewCommentToClaimWithPressBack();
+    AllureSteps.checkNotAddingNewComment();
   }
+
   @Test
   @DisplayName("Отказ добавления комментария к заявке незаполненном поле ввода")
   public void testRefusalAddingNewCommentToClaimWithEmptyField() throws InterruptedException {
-    addNewClime(tittleClaim, dateClaim, timeClaim, descriptionClaim);
-    scrollAndClickToClaimWithTittle(tittleClaim);
-    addNewComment("");
-    waitUntilVisible(DataHelper.checkToast(R.string.toast_empty_field, true));
+    AllureSteps.addClaim();
+    AllureSteps.scrollToClaimWithTittleAndClick();
+    AllureSteps.refusalAddingNewCommentToClaimWithEmptyField();
+    AllureSteps.checkToastByEmptyField();
     Espresso.pressBack();
   }
+
   @Test
-  @DisplayName("Отказ добавления комментария к заявке при незаполнении поля ввода пробелами")
+  @DisplayName("Отказ добавления комментария к заявке при заполнении поля ввода пробелами")
   public void testRefusalAddingNewCommentToClaimWithOnlySpacesInField() throws InterruptedException {
-    addNewClime(tittleClaim, dateClaim, timeClaim, descriptionClaim);
-    scrollAndClickToClaimWithTittle(tittleClaim);
-    addNewComment("   ");
-    waitUntilVisible(DataHelper.checkToast(R.string.toast_empty_field, true));
+    AllureSteps.addClaim();
+    AllureSteps.scrollToClaimWithTittleAndClick();
+    AllureSteps.refusalAddingNewCommentToClaimWithOnlySpacesInField();
+    AllureSteps.checkToastByEmptyField();
     Espresso.pressBack();
   }
+
   @Test
   @DisplayName("Редактирование существующего комментария у заявки")
   public void testSuccessEditingExistingCommentToClaim() throws InterruptedException {
@@ -400,6 +391,7 @@ public class ClaimesPageTest {
     editComment(commentClaimEditind);
     onView(withText(commentClaimEditind)).check(matches(isDisplayed()));
   }
+
   @Test
   @DisplayName("Не изменение существующего комментария у заявки при редактировании и нажатии кнопки Отмена")
   public void testCancelEditingExistingCommentToClaimWithPressCancel() throws Exception {
@@ -411,6 +403,7 @@ public class ClaimesPageTest {
     cancelУEditCommentWhenPressedCancel(commentClaimEditind);
     onView(withText(commentClaim)).check(matches(isDisplayed()));
   }
+
   @Test
   @DisplayName("Не изменение существующего комментария у заявки при редактировании и нажатии кнопки Назад")
   public void testCancelEditingExistingCommentToClaimWithPressBack() throws Exception {
@@ -422,6 +415,7 @@ public class ClaimesPageTest {
     cancelУEditCommentWhenPressedBack(commentClaimEditind);
     onView(withText(commentClaim)).check(matches(isDisplayed()));
   }
+
   @Test
   @DisplayName("Редактирование Темы у существующей заявки")
   public void testSuccessEditingTittleToExistingClaim() throws Exception {
@@ -430,6 +424,7 @@ public class ClaimesPageTest {
     editingTittleClaim(tittleClaim + "123");
     onView(withText(tittleClaim + "123")).check(matches(isDisplayed()));
   }
+
   @Test
   @DisplayName("Редактирование Даты у существующей заявки")
   public void testSuccessEditingDateToExistingClaim() throws Exception {
@@ -438,6 +433,7 @@ public class ClaimesPageTest {
     editingDateClaim(newDateClaim);
     onView(withText(newDateClaim)).check(matches(isDisplayed()));
   }
+
   @Test
   @DisplayName("Редактирование Времени у существующей заявки")
   public void testSuccessEditingTimeToExistingClaim() throws Exception {
@@ -446,6 +442,7 @@ public class ClaimesPageTest {
     editingTimeClaim(newTimeClaim);
     onView(withText(newTimeClaim)).check(matches(isDisplayed()));
   }
+
   @Test
   @DisplayName("Редактирование Описания у существующей заявки")
   public void testSuccessEditingDescriptionToExistingClaim() throws Exception {
@@ -466,6 +463,7 @@ public class ClaimesPageTest {
     onView(withText(timeClaim)).check(matches(isDisplayed()));
     onView(withText(descriptionClaim)).check(matches(isDisplayed()));
   }
+
   @Test
   @DisplayName("Отмена редактирования полей существующей заявки при нажатии кнопки Назад")
   public void testCancelEditingToExistingClaimWithPressBack() throws Exception {
