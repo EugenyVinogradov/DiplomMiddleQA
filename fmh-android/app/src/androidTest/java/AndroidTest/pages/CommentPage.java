@@ -50,12 +50,12 @@ public class CommentPage {
     commentSaveButton.perform(click());
   }
 
-  public static void cancelУEditCommentWhenPressedCancel(String comment) {
+  public static void cancelEditCommentWhenPressedCancel(String comment) {
     fillingFieldsNewComment(comment);
     commentCancelButton.perform(click());
   }
 
-  public static void cancelУEditCommentWhenPressedBack(String comment) {
+  public static void cancelEditCommentWhenPressedBack(String comment) {
     fillingFieldsNewComment(comment);
     Espresso.pressBack();
   }

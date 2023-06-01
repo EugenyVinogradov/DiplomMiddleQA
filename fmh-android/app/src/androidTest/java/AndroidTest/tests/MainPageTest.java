@@ -1,35 +1,7 @@
 package AndroidTest.tests;
 
-import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static AndroidTest.data.Data.dateClaim;
-import static AndroidTest.data.Data.descriptionClaim;
-import static AndroidTest.data.Data.timeClaim;
-import static AndroidTest.data.Data.tittleClaim;
-import static AndroidTest.data.DataHelper.waitElement;
-import static AndroidTest.pages.AboutPage.aboutInfo;
-import static AndroidTest.pages.AboutPage.backButton;
-import static AndroidTest.pages.AuthPage.successLogin;
-import static AndroidTest.pages.ClimesPage.filterClimesButton;
-import static AndroidTest.pages.ClimesPage.filterClimesButtonID;
-import static AndroidTest.pages.ClimesPage.isClaimExistWithParams;
-import static AndroidTest.pages.MainPage.addNewClaim;
-import static AndroidTest.pages.MainPage.allClimesButton;
-import static AndroidTest.pages.MainPage.climesButton;
-import static AndroidTest.pages.MainPage.goToAboutPage;
-import static AndroidTest.pages.MainPage.goToClaimesPage;
-import static AndroidTest.pages.MainPage.goToClaimesPageByNavigationMenu;
-import static AndroidTest.pages.MainPage.goToNewsPage;
-import static AndroidTest.pages.MainPage.goToNewsPageByNavigationMenu;
-import static AndroidTest.pages.MainPage.goToQuotesPage;
-import static AndroidTest.pages.MainPage.logOut;
-import static AndroidTest.pages.MainPage.mainMenuButton;
-import static AndroidTest.pages.MainPage.newsButton;
-import static AndroidTest.pages.NewsPage.editNewsButton;
-import static AndroidTest.pages.QuotesPage.header;
-
-import androidx.test.espresso.Espresso;
+import static AndroidTest.Steps.AllureSteps.logOutFromApp;
+import static AndroidTest.Steps.AllureSteps.successLoginStep;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 
 import org.junit.After;
@@ -38,116 +10,132 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import AndroidTest.Steps.AllureSteps;
+import io.qameta.allure.android.rules.ScreenshotRule;
 import io.qameta.allure.android.runners.AllureAndroidJUnit4;
+import io.qameta.allure.kotlin.Attachment;
+import io.qameta.allure.kotlin.Epic;
 import io.qameta.allure.kotlin.junit4.DisplayName;
 import ru.iteco.fmhandroid.ui.AppActivity;
 
+@Epic("Тестирование главной страницы приложения")
 
 @RunWith(AllureAndroidJUnit4.class)
-
 public class MainPageTest {
 
   @Before
   public void login() {
-    successLogin();
+    successLoginStep();
   }
 
   @After
   public void logOutApp() {
-    logOut();
+    logOutFromApp();
   }
 
   @Rule
   public ActivityScenarioRule<AppActivity> mActivityScenarioRule =
       new ActivityScenarioRule<>(AppActivity.class);
 
+  @Rule
+  public ScreenshotRule screenshotRule =
+      new ScreenshotRule(ScreenshotRule.Mode.FAILURE, "test_fail");
+
 
   @Test
   @DisplayName("Переход в раздел Заявки с помощью кнопки в меню навигации приложения")
+  @Attachment
   public void isItPossibleToGoToClaimsSectionWithNavigationMenuButton() {
-    goToClaimesPageByNavigationMenu();
-    filterClimesButton.check(matches(isDisplayed()));
+    AllureSteps.goToClaimsPageWithPressNavigationMenuButton();
+    AllureSteps.isFilterButtonDisplayed();
   }
 
   @Test
   @DisplayName("Переход в раздел Заявки с помощью кнопки на главной странице")
+  @Attachment
   public void isItPossibleToGoToClaimsSectionWithMainPageButton() {
-    goToClaimesPage();
-    filterClimesButton.check(matches(isDisplayed()));
+    AllureSteps.goToClaimsPageWithPressButtonOnMainPage();
+    AllureSteps.isFilterButtonDisplayed();
   }
 
   @Test
   @DisplayName("Возврат из раздела Заявки на предыдущую страницу приложения при тапе на BACK")
+  @Attachment
   public void returnFromClaimsPageToPreviousPageByTapBack() {
-    goToNewsPage();
-    mainMenuButton.perform(click());
-    climesButton.perform(click());
-    Espresso.pressBack();
-    editNewsButton.check(matches(isDisplayed()));
+    AllureSteps.goToNewsPageWithPressButtonOnMainPage();
+    AllureSteps.goToClaimsPageWithPressNavigationMenuButton();
+    AllureSteps.pressBack();
+    AllureSteps.isEditingNewsButtonDisplayed();
   }
 
   @Test
   @DisplayName("Переход в раздел Новости с помощью кнопки в меню навигации приложения")
+  @Attachment
   public void isItPossibleToGoToNewsSectionWithNavigationMenuButton() {
-    goToNewsPageByNavigationMenu();
-    editNewsButton.check(matches(isDisplayed()));
+    AllureSteps.goToNewsPageWithPressNavigationMenuButton();
+    AllureSteps.isEditingNewsButtonDisplayed();
   }
 
   @Test
   @DisplayName("Переход в раздел Новости с помощью кнопки на главной странице")
+  @Attachment
   public void isItPossibleToGoToNewsSectionWithMainPageButton() {
-    goToNewsPage();
-    editNewsButton.check(matches(isDisplayed()));
+    AllureSteps.goToNewsPageWithPressButtonOnMainPage();
+    AllureSteps.isEditingNewsButtonDisplayed();
   }
 
   @Test
   @DisplayName("Возврат из раздела Новости на предыдущую страницу приложения при тапе на BACK")
+  @Attachment
   public void returnFromNewsPageToPreviousPageByTapBack() {
-    goToClaimesPage();
-    mainMenuButton.perform(click());
-    newsButton.perform(click());
-    Espresso.pressBack();
-    waitElement(filterClimesButtonID);
-    filterClimesButton.check(matches(isDisplayed()));
+    AllureSteps.goToClaimsPageWithPressButtonOnMainPage();
+    AllureSteps.goToNewsPageWithPressNavigationMenuButton();
+    AllureSteps.pressBack();
+    AllureSteps.isFilterButtonDisplayed();
   }
 
   @Test
   @DisplayName("Переход в раздел О приложении с помощью кнопки в меню навигации приложения")
+  @Attachment
   public void isItPossibleToGoToAboutSectionWithNavigationMenuButton() {
-    goToAboutPage();
-    aboutInfo.check(matches(isDisplayed()));
-    backButton.perform(click());
+    AllureSteps.goToAboutPageWithPressNavigationMenuButton();
+    AllureSteps.isDeveloperTextViewDisplayed();
+    AllureSteps.pressBack();
   }
 
   @Test
   @DisplayName("Возврат из раздела О приложении на предыдущую страницу приложения при тапе на BACK")
+  @Attachment
   public void returnFromAboutPageToPreviousPageByTapBack() {
-    goToAboutPage();
-    Espresso.pressBack();
-    allClimesButton.check(matches(isDisplayed()));
+    AllureSteps.goToAboutPageWithPressNavigationMenuButton();
+    AllureSteps.pressBack();
+    AllureSteps.isAllClaimsButtonDisplayed();
   }
 
   @Test
   @DisplayName("Переход в раздел Цитаты с помощью кнопки на главной странице")
+  @Attachment
   public void isItPossibleToGoToQuotesSectionWithMainPageButton() {
-    goToQuotesPage();
-    header.check(matches(isDisplayed()));
+    AllureSteps.goToQuotesPageWithPressButtonOnMainPage();
+    AllureSteps.isHeaderQuotesPageDisplayed();
   }
 
   @Test
   @DisplayName("Возврат из раздела Цитаты на предыдущую страницу приложения при тапе на BACK")
+  @Attachment
   public void returnFromQuotesPageToPreviousPageByTapBack() {
-    goToQuotesPage();
-    Espresso.pressBack();
-    allClimesButton.check(matches(isDisplayed()));
+    AllureSteps.goToQuotesPageWithPressButtonOnMainPage();
+    AllureSteps.pressBack();
+    AllureSteps.isAllClaimsButtonDisplayed();
   }
 
   @Test
   @DisplayName("Создание Заявки с помощью кнопки на главной странице")
+  @Attachment
   public void createNewClaimWithButtonOnMainPage() throws InterruptedException {
-    addNewClaim(tittleClaim, dateClaim, timeClaim, descriptionClaim);
-    goToClaimesPage();
-    isClaimExistWithParams(tittleClaim, dateClaim, timeClaim, descriptionClaim);
+    AllureSteps.addClaim();
+    AllureSteps.goToClaimsPageWithPressButtonOnMainPage();
+    AllureSteps.isClaimExist();
   }
 
 }

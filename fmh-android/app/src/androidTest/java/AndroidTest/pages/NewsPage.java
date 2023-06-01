@@ -33,11 +33,6 @@ public class NewsPage {
     sortingNewsButton.perform(click());
   }
 
-  public static void filterNewsByTittle(String text) throws InterruptedException {
-    filterNewsButton.perform(click());
-    categoryNewsField.perform(replaceText(text));
-    filterButton.perform(click());
-  }
 
   public static void filterNewsByDate(String startDate, String endDate) {
     filterNewsButton.perform(click());
@@ -85,13 +80,5 @@ public class NewsPage {
     onView(withId(R.id.news_list_recycler_view)).perform(RecyclerViewActions.scrollToPosition(position));
   }
 
-  public static int getNewsCount(ActivityScenarioRule<AppActivity> myActivityScenarioRule) {
-    final int[] itemCount = new int[1];
-    myActivityScenarioRule.getScenario().onActivity(activity -> {
-      RecyclerView recyclerView = activity.findViewById(R.id.news_list_recycler_view);
-      itemCount[0] = recyclerView.getAdapter().getItemCount();
-    });
-    return itemCount[0];
-  }
 
 }

@@ -7,7 +7,6 @@ plugins {
     id 'kotlin-parcelize'
     id 'androidx.navigation.safeargs.kotlin'
     id 'com.google.firebase.crashlytics'
-    id 'io.qameta.allure' version '2.10.0'
 }
 
 android {
@@ -21,6 +20,7 @@ android {
         versionCode 14
         versionName "1.0.0"
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+        multiDexEnabled true
     }
 
     compileOptions {
@@ -103,12 +103,14 @@ dependencies {
     implementation 'com.google.firebase:firebase-crashlytics-ktx'
 
 
-
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test:rules:1.5.0'
     androidTestImplementation 'androidx.test:runner:1.5.2'
     androidTestImplementation 'io.qameta.allure:allure-kotlin-android:2.4.0'
+    testImplementation 'io.qameta.allure:allure-junit4:2.17.0'
+
+    testImplementation 'io.qameta.allure:allure-java-commons:2.17.0'
 
     androidTestImplementation "androidx.arch.core:core-testing:2.1.0"
 
@@ -129,9 +131,11 @@ dependencies {
     androidTestImplementation 'org.hamcrest:hamcrest:2.2'
     androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
 
-
-
-
+    androidTestImplementation "io.qameta.allure:allure-kotlin-android:2.4.0"
+    androidTestImplementation "io.qameta.allure:allure-kotlin-model:2.4.0"
+    androidTestImplementation "io.qameta.allure:allure-kotlin-commons:2.4.0"
+    androidTestImplementation "io.qameta.allure:allure-kotlin-junit4:2.4.0"
+    androidTestImplementation 'io.qameta.allure:allure-java-commons:2.17.0'
 
 
     implementation group: 'net.datafaker', name: 'datafaker', version: '1.8.1'

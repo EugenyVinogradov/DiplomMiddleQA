@@ -1,11 +1,15 @@
 package AndroidTest.tests;
 
 
-import static AndroidTest.pages.AuthPage.successLogin;
-import static AndroidTest.pages.MainPage.goToAboutPage;
-import static AndroidTest.pages.MainPage.logOut;
+import static AndroidTest.Steps.AllureSteps.goToAboutPageStep;
+import static AndroidTest.Steps.AllureSteps.isAppDeveloperDisplayed;
+import static AndroidTest.Steps.AllureSteps.isAppVersionDisplayed;
+import static AndroidTest.Steps.AllureSteps.isWebPagePrivacyPolicyExistence;
+import static AndroidTest.Steps.AllureSteps.isWebPageTermsOfUseExistence;
+import static AndroidTest.Steps.AllureSteps.logOutFromApp;
+import static AndroidTest.Steps.AllureSteps.pressBack;
+import static AndroidTest.Steps.AllureSteps.successLoginStep;
 
-import androidx.test.espresso.Espresso;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 
 import org.junit.After;
@@ -14,52 +18,67 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import AndroidTest.Steps.AllureSteps;
+import io.qameta.allure.android.rules.ScreenshotRule;
 import io.qameta.allure.android.runners.AllureAndroidJUnit4;
+import io.qameta.allure.kotlin.Attachment;
+import io.qameta.allure.kotlin.Epic;
 import io.qameta.allure.kotlin.junit4.DisplayName;
 import ru.iteco.fmhandroid.ui.AppActivity;
+
+@Epic("Тестирование страницы О приложении")
 
 @RunWith(AllureAndroidJUnit4.class)
 public class AboutPageTest {
 
   @Before
   public void login() {
-    successLogin();
-    goToAboutPage();
+    successLoginStep();
+    goToAboutPageStep();
   }
 
   @After
   public void logOutApp() {
-    logOut();
+    logOutFromApp();
   }
 
   @Rule
   public ActivityScenarioRule<AppActivity> myActivityScenarioRule =
       new ActivityScenarioRule<>(AppActivity.class);
 
+  @Rule
+  public ScreenshotRule screenshotRule =
+      new ScreenshotRule(ScreenshotRule.Mode.FAILURE, "test_fail");
+
+
   @Test
   @DisplayName("Видимость сведений о версии приложения")
+  @Attachment
   public void testVisibleVersion() {
-    AllureSteps.isAppVersionDisplayed();
-    Espresso.pressBack();
+    isAppVersionDisplayed();
+    pressBack();
   }
 
   @Test
   @DisplayName("Видимость сведений о  разработчике приложения")
+  @Attachment
   public void testVisibleDeveloper() {
-    AllureSteps.isAppDeveloperDisplayed();
-    Espresso.pressBack();
+    isAppDeveloperDisplayed();
+    pressBack();
   }
 
   @Test
   @DisplayName("Существование веб-страницы с политикой конфиденциальности")
+  @Attachment
   public void testPrivacyPolicyPageExistence() {
-    AllureSteps.isWebPagePrivacyPolicyExistence();
+    isWebPagePrivacyPolicyExistence();
+    pressBack();
   }
 
   @Test
+  @Attachment
   @DisplayName("Существование веб-страницы с условиями использования")
   public void testЕTermsOfUsePageExistence() {
-    AllureSteps.isWebPageTermsOfUseExistence();
+    isWebPageTermsOfUseExistence();
+    pressBack();
   }
 }

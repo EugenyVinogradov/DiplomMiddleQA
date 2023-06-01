@@ -2,6 +2,7 @@ package AndroidTest.data;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.os.IBinder;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,12 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeoutException;
 
@@ -52,11 +59,15 @@ import androidx.test.espresso.util.HumanReadables;
 import androidx.test.espresso.util.TreeIterables;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.runner.screenshot.ScreenCapture;
+import androidx.test.runner.screenshot.Screenshot;
+import androidx.test.uiautomator.UiDevice;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.StringDescription;
 import org.hamcrest.TypeSafeMatcher;
+import io.qameta.allure.Allure;
 
 import ru.iteco.fmhandroid.R;
 import ru.iteco.fmhandroid.ui.AppActivity;
@@ -106,91 +117,91 @@ public class DataHelper {
   }
 
 
-  public static ViewAction waitUntil(Matcher<View> matcher) {
-    return actionWithAssertions(new ViewAction() {
-      @Override
-      public Matcher<View> getConstraints() {
-        return isAssignableFrom(View.class);
-      }
+//  public static ViewAction waitUntil(Matcher<View> matcher) {
+//    return actionWithAssertions(new ViewAction() {
+//      @Override
+//      public Matcher<View> getConstraints() {
+//        return isAssignableFrom(View.class);
+//      }
+//
+//      @Override
+//      public String getDescription() {
+//        StringDescription description = new StringDescription();
+//        matcher.describeTo(description);
+//        return String.format("wait until: %s", description);
+//      }
+//
+//      @Override
+//      public void perform(UiController uiController, View view) {
+//        if (!matcher.matches(view)) {
+//          LayoutChangeCallback callback = new LayoutChangeCallback(matcher);
+//          try {
+//            IdlingRegistry.getInstance().register(callback);
+//            view.addOnLayoutChangeListener(callback);
+//            uiController.loopMainThreadUntilIdle();
+//          } finally {
+//            view.removeOnLayoutChangeListener(callback);
+//            IdlingRegistry.getInstance().unregister(callback);
+//          }
+//        }
+//      }
+//    });
+//  }
 
-      @Override
-      public String getDescription() {
-        StringDescription description = new StringDescription();
-        matcher.describeTo(description);
-        return String.format("wait until: %s", description);
-      }
-
-      @Override
-      public void perform(UiController uiController, View view) {
-        if (!matcher.matches(view)) {
-          LayoutChangeCallback callback = new LayoutChangeCallback(matcher);
-          try {
-            IdlingRegistry.getInstance().register(callback);
-            view.addOnLayoutChangeListener(callback);
-            uiController.loopMainThreadUntilIdle();
-          } finally {
-            view.removeOnLayoutChangeListener(callback);
-            IdlingRegistry.getInstance().unregister(callback);
-          }
-        }
-      }
-    });
-  }
-
-  private static class LayoutChangeCallback implements IdlingResource, View.OnLayoutChangeListener {
-
-    private Matcher<View> matcher;
-    private IdlingResource.ResourceCallback callback;
-    private boolean matched = false;
-
-    LayoutChangeCallback(Matcher<View> matcher) {
-      this.matcher = matcher;
-    }
-
-    @Override
-    public String getName() {
-      return "Layout change callback";
-    }
-
-    @Override
-    public boolean isIdleNow() {
-      return matched;
-    }
-
-    @Override
-    public void registerIdleTransitionCallback(ResourceCallback callback) {
-      this.callback = callback;
-    }
-
-    @Override
-    public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
-      matched = matcher.matches(v);
-      callback.onTransitionToIdle();
-    }
-  }
+//  private static class LayoutChangeCallback implements IdlingResource, View.OnLayoutChangeListener {
+//
+//    private Matcher<View> matcher;
+//    private IdlingResource.ResourceCallback callback;
+//    private boolean matched = false;
+//
+//    LayoutChangeCallback(Matcher<View> matcher) {
+//      this.matcher = matcher;
+//    }
+//
+//    @Override
+//    public String getName() {
+//      return "Layout change callback";
+//    }
+//
+//    @Override
+//    public boolean isIdleNow() {
+//      return matched;
+//    }
+//
+//    @Override
+//    public void registerIdleTransitionCallback(ResourceCallback callback) {
+//      this.callback = callback;
+//    }
+//
+//    @Override
+//    public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+//      matched = matcher.matches(v);
+//      callback.onTransitionToIdle();
+//    }
+//  }
 
   public static void waitElement(int id) {
     onView(isRoot()).perform(waitDisplayed(id, 5000));
   }
 
-  public static Matcher<View> childAtPosition(
-      final Matcher<View> parentMatcher, final int position) {
-
-    return new TypeSafeMatcher<View>() {
-      @Override
-      public void describeTo(Description description) {
-        description.appendText("Child at position " + position + " in parent ");
-        parentMatcher.describeTo(description);
-      }
-
-      @Override
-      public boolean matchesSafely(View view) {
-        ViewParent parent = view.getParent();
-        return parent instanceof ViewGroup && parentMatcher.matches(parent)
-            && view.equals(((ViewGroup) parent).getChildAt(position));
-      }
-    };
-  }
+//  public static Matcher<View> childAtPosition(
+//      final Matcher<View> parentMatcher, final int position) {
+//
+//    return new TypeSafeMatcher<View>() {
+//      @Override
+//      public void describeTo(Description description) {
+//        description.appendText("Child at position " + position + " in parent ");
+//        parentMatcher.describeTo(description);
+//      }
+//
+//      @Override
+//      public boolean matchesSafely(View view) {
+//        ViewParent parent = view.getParent();
+//        return parent instanceof ViewGroup && parentMatcher.matches(parent)
+//            && view.equals(((ViewGroup) parent).getChildAt(position));
+//      }
+//    };
+//  }
 
   public static void waitUntilVisible(View view) {
     final CountDownLatch latch = new CountDownLatch(1);
@@ -247,9 +258,9 @@ public class DataHelper {
   public static void waitUntilVisible(ViewInteraction inRoot) {
   }
 
-  public static Matcher<Root> isPopupWindow() {
-    return isPlatformPopup();
-  }
+//  public static Matcher<Root> isPopupWindow() {
+//    return isPlatformPopup();
+//  }
 
   public static class RecyclerViewAssertions {
     public static ViewAssertion withRowContaining(final Matcher<View> viewMatcher) {
@@ -300,47 +311,47 @@ public class DataHelper {
     }
   }
 
-  public static int getCountFromRecyclerView(@IdRes int RecyclerViewId) {
-    final int[] COUNT = {0};
-    Matcher matcher = new TypeSafeMatcher<View>() {
-      @Override
-      protected boolean matchesSafely(View item) {
-        COUNT[0] = ((RecyclerView) item).getAdapter().getItemCount();
-        return true;
-      }
-
-      @Override
-      public void describeTo(Description description) {
-      }
-    };
-    onView(allOf(withId(RecyclerViewId), isDisplayed())).check(matches(matcher));
-    return COUNT[0];
-  }
-
-  public static Matcher<View> hasItem(Matcher<View> matcher) {
-    return new BoundedMatcher<View, RecyclerView>(RecyclerView.class) {
-
-      @Override
-      public void describeTo(Description description) {
-        description.appendText("has item: ");
-        matcher.describeTo(description);
-      }
-
-      @Override
-      protected boolean matchesSafely(RecyclerView view) {
-        RecyclerView.Adapter adapter = view.getAdapter();
-        for (int position = 0; position < adapter.getItemCount(); position++) {
-          int type = adapter.getItemViewType(position);
-          RecyclerView.ViewHolder holder = adapter.createViewHolder(view, type);
-          adapter.onBindViewHolder(holder, position);
-          if (matcher.matches(holder.itemView)) {
-            return true;
-          }
-        }
-        return false;
-      }
-    };
-  }
+//  public static int getCountFromRecyclerView(@IdRes int RecyclerViewId) {
+//    final int[] COUNT = {0};
+//    Matcher matcher = new TypeSafeMatcher<View>() {
+//      @Override
+//      protected boolean matchesSafely(View item) {
+//        COUNT[0] = ((RecyclerView) item).getAdapter().getItemCount();
+//        return true;
+//      }
+//
+//      @Override
+//      public void describeTo(Description description) {
+//      }
+//    };
+//    onView(allOf(withId(RecyclerViewId), isDisplayed())).check(matches(matcher));
+//    return COUNT[0];
+//  }
+//
+//  public static Matcher<View> hasItem(Matcher<View> matcher) {
+//    return new BoundedMatcher<View, RecyclerView>(RecyclerView.class) {
+//
+//      @Override
+//      public void describeTo(Description description) {
+//        description.appendText("has item: ");
+//        matcher.describeTo(description);
+//      }
+//
+//      @Override
+//      protected boolean matchesSafely(RecyclerView view) {
+//        RecyclerView.Adapter adapter = view.getAdapter();
+//        for (int position = 0; position < adapter.getItemCount(); position++) {
+//          int type = adapter.getItemViewType(position);
+//          RecyclerView.ViewHolder holder = adapter.createViewHolder(view, type);
+//          adapter.onBindViewHolder(holder, position);
+//          if (matcher.matches(holder.itemView)) {
+//            return true;
+//          }
+//        }
+//        return false;
+//      }
+//    };
+//  }
 
   public static class RecyclerViewMatcher {
     private final int recyclerViewId;
@@ -403,36 +414,36 @@ public class DataHelper {
     }
   }
 
-  public static class RecyclerViewItemCountIdlingResource implements IdlingResource {
-    private final RecyclerView recyclerView;
-    private final int expectedCount;
-    private volatile ResourceCallback resourceCallback;
-
-    public RecyclerViewItemCountIdlingResource(RecyclerView recyclerView) {
-      this.recyclerView = recyclerView;
-      this.expectedCount = recyclerView.getAdapter().getItemCount();
-    }
-
-    @Override
-    public String getName() {
-      return RecyclerViewItemCountIdlingResource.class.getName();
-    }
-
-    @Override
-    public boolean isIdleNow() {
-      int currentCount = recyclerView.getAdapter().getItemCount();
-      boolean idle = currentCount == expectedCount;
-      if (idle && resourceCallback != null) {
-        resourceCallback.onTransitionToIdle();
-      }
-      return idle;
-    }
-
-    @Override
-    public void registerIdleTransitionCallback(ResourceCallback callback) {
-      this.resourceCallback = callback;
-    }
-  }
+//  public static class RecyclerViewItemCountIdlingResource implements IdlingResource {
+//    private final RecyclerView recyclerView;
+//    private final int expectedCount;
+//    private volatile ResourceCallback resourceCallback;
+//
+//    public RecyclerViewItemCountIdlingResource(RecyclerView recyclerView) {
+//      this.recyclerView = recyclerView;
+//      this.expectedCount = recyclerView.getAdapter().getItemCount();
+//    }
+//
+//    @Override
+//    public String getName() {
+//      return RecyclerViewItemCountIdlingResource.class.getName();
+//    }
+//
+//    @Override
+//    public boolean isIdleNow() {
+//      int currentCount = recyclerView.getAdapter().getItemCount();
+//      boolean idle = currentCount == expectedCount;
+//      if (idle && resourceCallback != null) {
+//        resourceCallback.onTransitionToIdle();
+//      }
+//      return idle;
+//    }
+//
+//    @Override
+//    public void registerIdleTransitionCallback(ResourceCallback callback) {
+//      this.resourceCallback = callback;
+//    }
+//  }
 //
 //    public static int getItemCount() {
 //        AtomicReference<Integer> count = new AtomicReference<>(0);
@@ -443,25 +454,24 @@ public class DataHelper {
 //        return count.get();
 //    }
 
-  public static Matcher<View> atPosition(final int position, @NonNull final Matcher<View> itemMatcher) {
-    return new BoundedMatcher<View, RecyclerView>(RecyclerView.class) {
-      @Override
-      public void describeTo(Description description) {
-        description.appendText("has item at position " + position + ": ");
-        itemMatcher.describeTo(description);
-      }
-
-      @Override
-      protected boolean matchesSafely(final RecyclerView recyclerView) {
-        final RecyclerView.ViewHolder viewHolder = recyclerView.findViewHolderForAdapterPosition(position);
-        if (viewHolder == null) {
-          // has no item on such position
-          return false;
-        }
-        return itemMatcher.matches(viewHolder.itemView);
-      }
-    };
-  }
+//  public static Matcher<View> atPosition(final int position, @NonNull final Matcher<View> itemMatcher) {
+//    return new BoundedMatcher<View, RecyclerView>(RecyclerView.class) {
+//      @Override
+//      public void describeTo(Description description) {
+//        description.appendText("has item at position " + position + ": ");
+//        itemMatcher.describeTo(description);
+//      }
+//
+//      @Override
+//      protected boolean matchesSafely(final RecyclerView recyclerView) {
+//        final RecyclerView.ViewHolder viewHolder = recyclerView.findViewHolderForAdapterPosition(position);
+//        if (viewHolder == null) {
+//          return false;
+//        }
+//        return itemMatcher.matches(viewHolder.itemView);
+//      }
+//    };
+//  }
 
   public static String getTextFromViewInteraction(ViewInteraction viewInteraction) {
     final String[] text = {""};
@@ -546,51 +556,50 @@ public class DataHelper {
     }
   }
 
-  public static int getViewHeight(int recyclerViewId, int position) {
-    final int[] height = {0};
-    onView(withId(recyclerViewId)).perform(RecyclerViewActions.scrollToPosition(position));
-    onView(withId(recyclerViewId)).perform(RecyclerViewActions.actionOnItemAtPosition(position, new ViewAction() {
-      @Override
-      public Matcher<View> getConstraints() {
-        return isAssignableFrom(View.class);
-      }
-
-      @Override
-      public String getDescription() {
-        return "Get height of item";
-      }
-
-      @Override
-      public void perform(UiController uiController, View view) {
-        height[0] = view.getHeight();
-      }
-    }));
-    return height[0];
-  }
-
-  public static ViewAction waitForView(final long millis) {
-    return new ViewAction() {
-      @Override
-      public Matcher<View> getConstraints() {
-        return isRoot();
-      }
-
-      @Override
-      public String getDescription() {
-        return "Ожидание определенного представления";
-      }
-
-      @Override
-      public void perform(UiController uiController, View view) {
-        uiController.loopMainThreadUntilIdle();
-        final long startTime = System.currentTimeMillis();
-        final long endTime = startTime + millis;
-        while (System.currentTimeMillis() < endTime) {
-          // Ничего не делать и ждать
-        }
-      }
-    };
-  }
+//  public static int getViewHeight(int recyclerViewId, int position) {
+//    final int[] height = {0};
+//    onView(withId(recyclerViewId)).perform(RecyclerViewActions.scrollToPosition(position));
+//    onView(withId(recyclerViewId)).perform(RecyclerViewActions.actionOnItemAtPosition(position, new ViewAction() {
+//      @Override
+//      public Matcher<View> getConstraints() {
+//        return isAssignableFrom(View.class);
+//      }
+//
+//      @Override
+//      public String getDescription() {
+//        return "Get height of item";
+//      }
+//
+//      @Override
+//      public void perform(UiController uiController, View view) {
+//        height[0] = view.getHeight();
+//      }
+//    }));
+//    return height[0];
+//  }
+//
+//  public static ViewAction waitForView(final long millis) {
+//    return new ViewAction() {
+//      @Override
+//      public Matcher<View> getConstraints() {
+//        return isRoot();
+//      }
+//
+//      @Override
+//      public String getDescription() {
+//        return "Ожидание определенного представления";
+//      }
+//
+//      @Override
+//      public void perform(UiController uiController, View view) {
+//        uiController.loopMainThreadUntilIdle();
+//        final long startTime = System.currentTimeMillis();
+//        final long endTime = startTime + millis;
+//        while (System.currentTimeMillis() < endTime) {
+//        }
+//      }
+//    };
+//  }
 
   public static ViewAction clickChildViewWithId(final int id) {
     return new ViewAction() {
