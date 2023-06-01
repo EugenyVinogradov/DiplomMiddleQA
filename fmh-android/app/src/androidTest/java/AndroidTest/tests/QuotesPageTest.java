@@ -3,6 +3,7 @@ package AndroidTest.tests;
 import static AndroidTest.Steps.AllureSteps.goToQuotesPageStep;
 import static AndroidTest.Steps.AllureSteps.logOutFromApp;
 import static AndroidTest.Steps.AllureSteps.successLoginStep;
+import static AndroidTest.data.DataHelper.getUniqueScreenshotName;
 
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
@@ -43,7 +44,7 @@ public class QuotesPageTest {
 
   @Rule
   public ScreenshotRule screenshotRule =
-      new ScreenshotRule(ScreenshotRule.Mode.FAILURE, "test_fail");
+      new ScreenshotRule(ScreenshotRule.Mode.FAILURE, getUniqueScreenshotName());
 
   @Test
   @DisplayName("Развернуть цитату")

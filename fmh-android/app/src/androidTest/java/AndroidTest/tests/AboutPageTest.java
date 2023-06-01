@@ -9,6 +9,7 @@ import static AndroidTest.Steps.AllureSteps.isWebPageTermsOfUseExistence;
 import static AndroidTest.Steps.AllureSteps.logOutFromApp;
 import static AndroidTest.Steps.AllureSteps.pressBack;
 import static AndroidTest.Steps.AllureSteps.successLoginStep;
+import static AndroidTest.data.DataHelper.getUniqueScreenshotName;
 
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 
@@ -23,6 +24,7 @@ import io.qameta.allure.android.runners.AllureAndroidJUnit4;
 import io.qameta.allure.kotlin.Attachment;
 import io.qameta.allure.kotlin.Epic;
 import io.qameta.allure.kotlin.junit4.DisplayName;
+import io.qameta.allure.kotlin.junit4.Tag;
 import ru.iteco.fmhandroid.ui.AppActivity;
 
 @Epic("Тестирование страницы О приложении")
@@ -47,7 +49,7 @@ public class AboutPageTest {
 
   @Rule
   public ScreenshotRule screenshotRule =
-      new ScreenshotRule(ScreenshotRule.Mode.FAILURE, "test_fail");
+      new ScreenshotRule(ScreenshotRule.Mode.FAILURE, getUniqueScreenshotName() );
 
 
   @Test

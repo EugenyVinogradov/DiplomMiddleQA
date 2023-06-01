@@ -2,6 +2,8 @@ package AndroidTest.tests;
 
 import static AndroidTest.Steps.AllureSteps.logOutFromApp;
 import static AndroidTest.Steps.AllureSteps.successLoginStep;
+import static AndroidTest.data.DataHelper.getUniqueScreenshotName;
+
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 
 import org.junit.After;
@@ -9,7 +11,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
 import AndroidTest.Steps.AllureSteps;
 import io.qameta.allure.android.rules.ScreenshotRule;
 import io.qameta.allure.android.runners.AllureAndroidJUnit4;
@@ -39,7 +40,7 @@ public class MainPageTest {
 
   @Rule
   public ScreenshotRule screenshotRule =
-      new ScreenshotRule(ScreenshotRule.Mode.FAILURE, "test_fail");
+      new ScreenshotRule(ScreenshotRule.Mode.FAILURE, getUniqueScreenshotName());
 
 
   @Test

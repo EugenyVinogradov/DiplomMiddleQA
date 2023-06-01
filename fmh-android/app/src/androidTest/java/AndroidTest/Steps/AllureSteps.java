@@ -1,6 +1,5 @@
 package AndroidTest.Steps;
 
-import static android.os.SystemClock.sleep;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.doubleClick;
@@ -158,6 +157,7 @@ public class AllureSteps {
     Allure.step("Переходим в раздел О приложении");
     goToAboutPage();
   }
+
   @Step("Переходим в раздел Цитаты")
   public static void goToQuotesPageStep() {
     Allure.step("Переходим в раздел Цитаты");
@@ -169,7 +169,6 @@ public class AllureSteps {
   public static void logOutFromApp() {
     Allure.step("Разлогиниваемся из приложения");
     logOut();
-    sleep(1000);
   }
 
   /* Шаги для страницы авторизации */

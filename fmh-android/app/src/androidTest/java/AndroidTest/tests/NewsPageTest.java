@@ -3,6 +3,7 @@ package AndroidTest.tests;
 import static AndroidTest.Steps.AllureSteps.goToNewsPageStep;
 import static AndroidTest.Steps.AllureSteps.logOutFromApp;
 import static AndroidTest.Steps.AllureSteps.successLoginStep;
+import static AndroidTest.data.DataHelper.getUniqueScreenshotName;
 
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
@@ -45,7 +46,7 @@ public class NewsPageTest {
 
   @Rule
   public ScreenshotRule screenshotRule =
-      new ScreenshotRule(ScreenshotRule.Mode.FAILURE, "test_fail");
+      new ScreenshotRule(ScreenshotRule.Mode.FAILURE, getUniqueScreenshotName());
 
   @Test
   @DisplayName("Сортировка новостей в списке новостей")

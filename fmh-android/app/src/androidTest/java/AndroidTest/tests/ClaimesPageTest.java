@@ -9,6 +9,7 @@ import static AndroidTest.Steps.AllureSteps.logOutFromApp;
 import static AndroidTest.Steps.AllureSteps.successLoginStep;
 import static AndroidTest.data.Data.tittleClaimFiftyOneCharacter;
 import static AndroidTest.data.DataHelper.getTextFromViewInteraction;
+import static AndroidTest.data.DataHelper.getUniqueScreenshotName;
 import static AndroidTest.pages.EditingClaim.closeButton;
 import static AndroidTest.pages.MainPage.goToClaimesPage;
 
@@ -51,7 +52,7 @@ public class ClaimesPageTest {
 
   @Rule
   public ScreenshotRule screenshotRule =
-      new ScreenshotRule(ScreenshotRule.Mode.FAILURE, "test_fail");
+      new ScreenshotRule(ScreenshotRule.Mode.FAILURE, getUniqueScreenshotName());
 
 // Закомментированные тесты производят фильтрацию по всем существующим заявкам. Так как тестирование
 // производится на продакшене, время прохождения каждого из них очень велико (около 30 минут самый быстрый).

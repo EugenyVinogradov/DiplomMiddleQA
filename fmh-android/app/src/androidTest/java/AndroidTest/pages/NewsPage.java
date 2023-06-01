@@ -13,13 +13,10 @@ import static AndroidTest.pages.FilterNews.dateEndPublish;
 import static AndroidTest.pages.FilterNews.dateStartPublish;
 import static AndroidTest.pages.FilterNews.filterButton;
 
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.contrib.RecyclerViewActions;
-import androidx.test.ext.junit.rules.ActivityScenarioRule;
 
 import ru.iteco.fmhandroid.R;
-import ru.iteco.fmhandroid.ui.AppActivity;
 
 public class NewsPage {
   public static ViewInteraction sortingNewsButton = onView(withId(R.id.sort_news_material_button));

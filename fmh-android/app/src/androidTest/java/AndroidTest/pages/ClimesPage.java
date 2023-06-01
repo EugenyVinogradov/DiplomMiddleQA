@@ -13,13 +13,11 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.isNotChecked;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.Matchers.anyOf;
 import static java.lang.Thread.sleep;
 import static AndroidTest.data.DataHelper.waitDisplayed;
 import static AndroidTest.data.DataHelper.waitElement;
-
 import static AndroidTest.pages.NewClaimPage.cancelButton;
 import static AndroidTest.pages.NewClaimPage.confirmCancelButtonOk;
 import static AndroidTest.pages.NewClaimPage.dateField;
@@ -27,6 +25,8 @@ import static AndroidTest.pages.NewClaimPage.descriptionField;
 import static AndroidTest.pages.NewClaimPage.saveButton;
 import static AndroidTest.pages.NewClaimPage.timeField;
 import static AndroidTest.pages.NewClaimPage.tittleField;
+
+import android.os.SystemClock;
 
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.test.espresso.Espresso;
@@ -187,6 +187,7 @@ public class ClimesPage {
     fillingFieldsNewClime(tittle, date, time, description);
     saveButton.perform(click());
     waitElement(R.id.claim_list_recycler_view);
+    SystemClock.sleep(500);
   }
 
   public static void addNewClimeWithoutSomething(String tittle, String date, String time, String description) {

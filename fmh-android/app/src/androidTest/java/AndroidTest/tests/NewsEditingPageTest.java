@@ -6,6 +6,7 @@ import static AndroidTest.Steps.AllureSteps.goToNewsEditingPageStep;
 import static AndroidTest.Steps.AllureSteps.goToNewsPageStep;
 import static AndroidTest.Steps.AllureSteps.logOutFromApp;
 import static AndroidTest.Steps.AllureSteps.successLoginStep;
+import static AndroidTest.data.DataHelper.getUniqueScreenshotName;
 import static AndroidTest.data.DataHelper.waitElement;
 
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
@@ -48,7 +49,7 @@ public class NewsEditingPageTest {
 
   @Rule
   public ScreenshotRule screenshotRule =
-      new ScreenshotRule(ScreenshotRule.Mode.FAILURE, "test_fail");
+      new ScreenshotRule(ScreenshotRule.Mode.FAILURE, getUniqueScreenshotName());
 
   @Test
   @DisplayName("Сортировка новостей в разделе редактирования новостей")

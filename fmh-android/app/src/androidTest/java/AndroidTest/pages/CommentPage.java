@@ -3,15 +3,10 @@ package AndroidTest.pages;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.replaceText;
-
 import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
-
-
 import static org.hamcrest.Matchers.endsWith;
-
 import static AndroidTest.pages.EditingClaim.addCommentButton;
-
 
 import androidx.test.espresso.Espresso;
 import androidx.test.espresso.ViewInteraction;

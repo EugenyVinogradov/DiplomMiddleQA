@@ -5,7 +5,6 @@ import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-
 import static org.hamcrest.CoreMatchers.allOf;
 import static AndroidTest.data.Data.commentClaim;
 import static AndroidTest.pages.MainPage.goToClaimesPage;
