@@ -58,6 +58,6 @@
 * [Чек-лист](https://github.com/EugenyVinogradov/DiplomMiddleQA/blob/main/Check.xlsx)
 * [Тест-кейсы](https://github.com/EugenyVinogradov/DiplomMiddleQA/blob/main/Cases.xlsx)
 * [Обнаруженные при ручном тестировании дефекты](https://github.com/EugenyVinogradov/DiplomMiddleQA/issues)
-* [Результыты автоматизированного тестирования - Allure Report](https://github.com/EugenyVinogradov/DiplomMiddleQA/blob/main/Allure%20Report.png)
-* [Результыты автоматизированного тестирования - allure-results](https://github.com/EugenyVinogradov/DiplomMiddleQA/blob/main/allure-results/allure-results.zip)
+* [Результаты автоматизированного тестирования - Allure Report](https://github.com/EugenyVinogradov/DiplomMiddleQA/blob/main/Allure%20Report.png)
+* [Результаты автоматизированного тестирования - allure-results](https://github.com/EugenyVinogradov/DiplomMiddleQA/blob/main/allure-results/allure-results.zip)
 * [Отчет о тестировании](https://github.com/EugenyVinogradov/DiplomMiddleQA/blob/main/Result.md)
