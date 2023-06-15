@@ -1,29 +1,23 @@
 package AndroidTest.tests;
 
-
-import static java.lang.Thread.sleep;
-import static AndroidTest.Steps.AllureSteps.goToNewsEditingPageStep;
-import static AndroidTest.Steps.AllureSteps.goToNewsPageStep;
-import static AndroidTest.Steps.AllureSteps.logOutFromApp;
-import static AndroidTest.Steps.AllureSteps.successLoginStep;
 import static AndroidTest.data.DataHelper.getUniqueScreenshotName;
-import static AndroidTest.data.DataHelper.waitElement;
+import static AndroidTest.pages.AuthPage.checkLogInAndLogInIfNot;
+import static AndroidTest.steps.BaseSteps.goToNewsEditingPageStep;
+import static AndroidTest.steps.BaseSteps.goToNewsPageStep;
 
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import AndroidTest.Steps.AllureSteps;
+import AndroidTest.steps.BaseSteps;
+import AndroidTest.steps.NewsEditingPageSteps;
 import io.qameta.allure.android.rules.ScreenshotRule;
 import io.qameta.allure.android.runners.AllureAndroidJUnit4;
-import io.qameta.allure.kotlin.Attachment;
 import io.qameta.allure.kotlin.Epic;
 import io.qameta.allure.kotlin.junit4.DisplayName;
-import ru.iteco.fmhandroid.R;
 import ru.iteco.fmhandroid.ui.AppActivity;
 
 @Epic("Тестирование страницы редактирования новостей")
@@ -32,16 +26,12 @@ import ru.iteco.fmhandroid.ui.AppActivity;
 public class NewsEditingPageTest {
 
   @Before
-  public void login() {
-    successLoginStep();
+  public void setUp() {
+    checkLogInAndLogInIfNot();
     goToNewsPageStep();
     goToNewsEditingPageStep();
   }
 
-  @After
-  public void logOutApp() {
-    logOutFromApp();
-  }
 
   @Rule
   public ActivityScenarioRule<AppActivity> myActivityScenarioRule =
@@ -53,170 +43,145 @@ public class NewsEditingPageTest {
 
   @Test
   @DisplayName("Сортировка новостей в разделе редактирования новостей")
-  @Attachment
   public void testSortingNewsInEditingNews() {
-    int itemCount = AllureSteps.getItemCount();
-    String firstDateBeforeSorting = AllureSteps.getFirstDateBeforeSorting();
-    AllureSteps.scrollNewsToLastPosition(itemCount - 1);
-    String lastDateBeforeSorting = AllureSteps.getLastDateBeforeSorting(itemCount - 1);
-    AllureSteps.sortingNewsStep();
-    AllureSteps.scrollNewsToFirstPosition();
-    String firstDateAfterSorting = AllureSteps.getFirstDateAfterSorting();
-    AllureSteps.scrollNewsToLastPosition(itemCount - 1);
-    String lastDateAfterSorting = AllureSteps.getLastDateAfterSorting(itemCount - 1);
-    AllureSteps.checkDateAfterSortingOne(firstDateBeforeSorting, lastDateAfterSorting);
-    AllureSteps.checkDateAfterSortingTwo(lastDateBeforeSorting, firstDateAfterSorting);
+    int itemCount = NewsEditingPageSteps.getItemCount();
+    String firstDateBeforeSorting = NewsEditingPageSteps.getFirstDateBeforeSorting();
+    NewsEditingPageSteps.scrollNewsToLastPosition(itemCount - 1);
+    String lastDateBeforeSorting = NewsEditingPageSteps.getLastDateBeforeSorting(itemCount - 1);
+    NewsEditingPageSteps.sortingNewsStep();
+    NewsEditingPageSteps.scrollNewsToFirstPosition();
+    String firstDateAfterSorting = NewsEditingPageSteps.getFirstDateAfterSorting();
+    NewsEditingPageSteps.scrollNewsToLastPosition(itemCount - 1);
+    String lastDateAfterSorting = NewsEditingPageSteps.getLastDateAfterSorting(itemCount - 1);
+    NewsEditingPageSteps.checkDateAfterSortingOne(firstDateBeforeSorting, lastDateAfterSorting);
+    NewsEditingPageSteps.checkDateAfterSortingTwo(lastDateBeforeSorting, firstDateAfterSorting);
   }
 
   @Test
   @DisplayName("Добавление новости")
-  @Attachment
-  public void testAddingNews() throws InterruptedException {
-    AllureSteps.addingNews();
-    AllureSteps.scrollToNewsWithTittleAndClick();
-    AllureSteps.editingNews();
-    AllureSteps.checkAttributesNews();
-    AllureSteps.pressBack();
+  public void testAddingNews() {
+    NewsEditingPageSteps.addingNews();
+    NewsEditingPageSteps.scrollToNewsWithTittleAndClick();
+    NewsEditingPageSteps.editingNews();
+    NewsEditingPageSteps.checkAttributesNews();
   }
 
   @Test
   @DisplayName("Фильтрация новостей по статусу Активна")
-  @Attachment
   public void testFilterNewsByStatusActive() {
-    AllureSteps.filterNewsByStatusActive();
-    int itemCount = AllureSteps.getItemCount();
-    AllureSteps.isStatusActive(itemCount);
+    NewsEditingPageSteps.filterNewsByStatusActive();
+    int itemCount = NewsEditingPageSteps.getItemCount();
+    NewsEditingPageSteps.isStatusActive(itemCount);
   }
 
   @Test
   @DisplayName("Фильтрация новостей по статусу Неактивна")
-  @Attachment
   public void testFilterNewsByStatusNotActive() {
-    AllureSteps.filterNewsByStatusNotActive();
-    int itemCount = AllureSteps.getItemCount();
-    AllureSteps.isStatusNotActive(itemCount);
+    NewsEditingPageSteps.filterNewsByStatusNotActive();
+    int itemCount = NewsEditingPageSteps.getItemCount();
+    NewsEditingPageSteps.isStatusNotActive(itemCount);
   }
 
   @Test
   @DisplayName("Фильтрация новостей по статусу Активна и дате публикации")
-  @Attachment
-  public void testFilterNewsByStatusActiveAndDatePublish() throws InterruptedException {
-    AllureSteps.addingNews();
-    AllureSteps.filterNewsByStatusActiveAndPublishDate();
-    int itemCount = AllureSteps.getItemCount();
-    AllureSteps.isStatusActiveAndPublishDateEqualsFilterDate(itemCount);
+  public void testFilterNewsByStatusActiveAndDatePublish() {
+    NewsEditingPageSteps.addingNews();
+    NewsEditingPageSteps.filterNewsByStatusActiveAndPublishDate();
+    int itemCount = NewsEditingPageSteps.getItemCount();
+    NewsEditingPageSteps.isStatusActiveAndPublishDateEqualsFilterDate(itemCount);
   }
 
   @Test
   @DisplayName("Смена статуса новости")
-  @Attachment
-  public void testChangeNewsStatus() throws InterruptedException {
-    AllureSteps.addingNews();
-    AllureSteps.changeStatusNewsToNotActive();
-    AllureSteps.editingNews();
-    AllureSteps.checkNotActiveStatus();
+  public void testChangeNewsStatus() {
+    NewsEditingPageSteps.addingNews();
+    NewsEditingPageSteps.changeStatusNewsToNotActive();
+    NewsEditingPageSteps.editingNews();
+    NewsEditingPageSteps.checkNotActiveStatus();
   }
 
   @Test
   @DisplayName("Фильтрация новостей по статусу Неактивна и дате публикации")
-  @Attachment
-  public void testFilterNewsByStatusNotActiveAndDatePublish() throws InterruptedException {
-    AllureSteps.addingNews();
-    AllureSteps.changeStatusNewsToNotActive();
-    AllureSteps.filterNewsByStatusNotActiveAndPublishDate();
-    int itemCount = AllureSteps.getItemCount();
-    AllureSteps.isStatusNotActiveAndPublishDateEqualsFilterDate(itemCount);
+  public void testFilterNewsByStatusNotActiveAndDatePublish() {
+    NewsEditingPageSteps.addingNews();
+    NewsEditingPageSteps.changeStatusNewsToNotActive();
+    NewsEditingPageSteps.filterNewsByStatusNotActiveAndPublishDate();
+    int itemCount = NewsEditingPageSteps.getItemCount();
+    NewsEditingPageSteps.isStatusNotActiveAndPublishDateEqualsFilterDate(itemCount);
   }
 
   @Test
   @DisplayName("Отказ в добавление новости при незаполненном поле Категория")
-  @Attachment
-  public void testRefusalAddingNewsWithEmptyFieldCategory() throws InterruptedException {
-    AllureSteps.addNewsWithEmptyFieldCategory();
-    AllureSteps.neverFieldsDoesntBeEmptyMessage();
-    AllureSteps.pressBack();
+  public void testRefusalAddingNewsWithEmptyFieldCategory() {
+    NewsEditingPageSteps.addNewsWithEmptyFieldCategory();
+    NewsEditingPageSteps.neverFieldsDoesntBeEmptyMessage();
   }
 
   @Test
   @DisplayName("Отказ в добавление новости при незаполненном поле Заголовок")
-  @Attachment
-  public void testRefusalAddingNewsWithEmptyFieldTittle() throws InterruptedException {
-    AllureSteps.addNewsWithEmptyFieldTittle();
-    AllureSteps.neverFieldsDoesntBeEmptyMessage();
-    AllureSteps.pressBack();
+  public void testRefusalAddingNewsWithEmptyFieldTittle() {
+    NewsEditingPageSteps.addNewsWithEmptyFieldTittle();
+    NewsEditingPageSteps.neverFieldsDoesntBeEmptyMessage();
   }
 
   @Test
   @DisplayName("Отказ в добавление новости при незаполненном поле Дата")
-  @Attachment
-  public void testRefusalAddingNewsWithEmptyFieldDate() throws InterruptedException {
-    AllureSteps.addNewsWithEmptyFieldDate();
-    AllureSteps.neverFieldsDoesntBeEmptyMessage();
-    AllureSteps.pressBack();
+  public void testRefusalAddingNewsWithEmptyFieldDate() {
+    NewsEditingPageSteps.addNewsWithEmptyFieldDate();
+    NewsEditingPageSteps.neverFieldsDoesntBeEmptyMessage();
   }
 
   @Test
   @DisplayName("Отказ в добавление новости при незаполненном поле Время")
-  @Attachment
-  public void testRefusalAddingNewsWithEmptyFieldTime() throws InterruptedException {
-    AllureSteps.addNewsWithEmptyFieldTime();
-    AllureSteps.neverFieldsDoesntBeEmptyMessage();
-    AllureSteps.pressBack();
+  public void testRefusalAddingNewsWithEmptyFieldTime() {
+    NewsEditingPageSteps.addNewsWithEmptyFieldTime();
+    NewsEditingPageSteps.neverFieldsDoesntBeEmptyMessage();
   }
 
   @Test
   @DisplayName("Отказ в добавление новости при незаполненном поле Описание")
-  @Attachment
-  public void testRefusalAddingNewsWithEmptyFieldDescription() throws InterruptedException {
-    AllureSteps.addNewsWithEmptyFieldDescription();
-    AllureSteps.neverFieldsDoesntBeEmptyMessage();
-    AllureSteps.pressBack();
+  public void testRefusalAddingNewsWithEmptyFieldDescription() {
+    NewsEditingPageSteps.addNewsWithEmptyFieldDescription();
+    NewsEditingPageSteps.neverFieldsDoesntBeEmptyMessage();
   }
 
   @Test
   @DisplayName("Отмена добавление новости при нажатии кнопки Отмена")
-  @Attachment
   public void testCancelAddingNewsWithPressCancel() {
-    AllureSteps.fillingAllFieldsNews();
-    AllureSteps.pressCancelButton();
-    AllureSteps.confirmCancelAddingNews();
-    AllureSteps.pressBack();
-    int itemCount = AllureSteps.getItemCount();
-    AllureSteps.isNewsNotCreated(itemCount);
+    NewsEditingPageSteps.fillingAllFieldsNews();
+    NewsEditingPageSteps.pressCancelButton();
+    NewsEditingPageSteps.confirmCancelAddingNews();
+    BaseSteps.pressBack();
+    int itemCount = NewsEditingPageSteps.getItemCount();
+    NewsEditingPageSteps.isNewsNotCreated(itemCount);
   }
 
   @Test
   @DisplayName("Отмена добавление новости при нажатии кнопки Назад")
-  @Attachment
   public void testCancelAddingNewsWithPressBack() {
-    AllureSteps.fillingAllFieldsNews();
-    AllureSteps.pressBack();
-    int itemCount = AllureSteps.getItemCount();
-    AllureSteps.isNewsNotCreated(itemCount);
+    NewsEditingPageSteps.fillingAllFieldsNews();
+    BaseSteps.pressBack();
+    int itemCount = NewsEditingPageSteps.getItemCount();
+    NewsEditingPageSteps.isNewsNotCreated(itemCount);
+
   }
 
   @Test
   @DisplayName("Удаление новости")
-  @Attachment
-  public void testDeleteNews() throws InterruptedException {
-    AllureSteps.addingNews();
-    sleep(1000);
-    AllureSteps.deleteAddedNews();
-    waitElement(R.id.news_list_recycler_view);
-    sleep(1000);
-    int itemCount = AllureSteps.getItemCount();
-    AllureSteps.isNewsDeleted(itemCount);
+  public void testDeleteNews() {
+    NewsEditingPageSteps.addingNews();
+    NewsEditingPageSteps.deleteAddedNews();
+    int itemCount = NewsEditingPageSteps.getItemCount();
+    NewsEditingPageSteps.isNewsDeleted(itemCount);
   }
 
   @Test
   @DisplayName("Редактирование атрибутов новости")
-  @Attachment
-  public void testChangeNewsAttribute() throws InterruptedException {
-    AllureSteps.addingNews();
-    AllureSteps.editingNews();
-    AllureSteps.changeCreatedNewsAttributes();
-    AllureSteps.editingNews();
-    AllureSteps.checkChangedNewsAttributes();
-    AllureSteps.pressBack();
+  public void testChangeNewsAttribute() {
+    NewsEditingPageSteps.addingNews();
+    NewsEditingPageSteps.editingNews();
+    NewsEditingPageSteps.changeCreatedNewsAttributes();
+    NewsEditingPageSteps.editingNews();
+    NewsEditingPageSteps.checkChangedNewsAttributes();
   }
 }

@@ -1,20 +1,19 @@
 package AndroidTest.tests;
 
-import static AndroidTest.Steps.AllureSteps.logOutFromApp;
-import static AndroidTest.Steps.AllureSteps.successLoginStep;
+import static AndroidTest.pages.AuthPage.checkLogInAndLogInIfNot;
 import static AndroidTest.data.DataHelper.getUniqueScreenshotName;
 
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import AndroidTest.Steps.AllureSteps;
+
+import AndroidTest.steps.BaseSteps;
+import AndroidTest.steps.MainPageSteps;
 import io.qameta.allure.android.rules.ScreenshotRule;
 import io.qameta.allure.android.runners.AllureAndroidJUnit4;
-import io.qameta.allure.kotlin.Attachment;
 import io.qameta.allure.kotlin.Epic;
 import io.qameta.allure.kotlin.junit4.DisplayName;
 import ru.iteco.fmhandroid.ui.AppActivity;
@@ -25,14 +24,10 @@ import ru.iteco.fmhandroid.ui.AppActivity;
 public class MainPageTest {
 
   @Before
-  public void login() {
-    successLoginStep();
+  public void setUp() {
+    checkLogInAndLogInIfNot();
   }
 
-  @After
-  public void logOutApp() {
-    logOutFromApp();
-  }
 
   @Rule
   public ActivityScenarioRule<AppActivity> mActivityScenarioRule =
@@ -45,98 +40,86 @@ public class MainPageTest {
 
   @Test
   @DisplayName("Переход в раздел Заявки с помощью кнопки в меню навигации приложения")
-  @Attachment
   public void isItPossibleToGoToClaimsSectionWithNavigationMenuButton() {
-    AllureSteps.goToClaimsPageWithPressNavigationMenuButton();
-    AllureSteps.isFilterButtonDisplayed();
+    MainPageSteps.goToClaimsPageWithPressNavigationMenuButton();
+    MainPageSteps.isFilterButtonDisplayed();
   }
 
   @Test
   @DisplayName("Переход в раздел Заявки с помощью кнопки на главной странице")
-  @Attachment
   public void isItPossibleToGoToClaimsSectionWithMainPageButton() {
-    AllureSteps.goToClaimsPageWithPressButtonOnMainPage();
-    AllureSteps.isFilterButtonDisplayed();
+    MainPageSteps.goToClaimsPageWithPressButtonOnMainPage();
+    MainPageSteps.isFilterButtonDisplayed();
   }
 
   @Test
   @DisplayName("Возврат из раздела Заявки на предыдущую страницу приложения при тапе на BACK")
-  @Attachment
   public void returnFromClaimsPageToPreviousPageByTapBack() {
-    AllureSteps.goToNewsPageWithPressButtonOnMainPage();
-    AllureSteps.goToClaimsPageWithPressNavigationMenuButton();
-    AllureSteps.pressBack();
-    AllureSteps.isEditingNewsButtonDisplayed();
+    MainPageSteps.goToNewsPageWithPressButtonOnMainPage();
+    MainPageSteps.goToClaimsPageWithPressNavigationMenuButton();
+    BaseSteps.pressBack();
+    MainPageSteps.isEditingNewsButtonDisplayed();
   }
 
   @Test
   @DisplayName("Переход в раздел Новости с помощью кнопки в меню навигации приложения")
-  @Attachment
   public void isItPossibleToGoToNewsSectionWithNavigationMenuButton() {
-    AllureSteps.goToNewsPageWithPressNavigationMenuButton();
-    AllureSteps.isEditingNewsButtonDisplayed();
+    MainPageSteps.goToNewsPageWithPressNavigationMenuButton();
+    MainPageSteps.isEditingNewsButtonDisplayed();
   }
 
   @Test
   @DisplayName("Переход в раздел Новости с помощью кнопки на главной странице")
-  @Attachment
   public void isItPossibleToGoToNewsSectionWithMainPageButton() {
-    AllureSteps.goToNewsPageWithPressButtonOnMainPage();
-    AllureSteps.isEditingNewsButtonDisplayed();
+    MainPageSteps.goToNewsPageWithPressButtonOnMainPage();
+    MainPageSteps.isEditingNewsButtonDisplayed();
   }
 
   @Test
   @DisplayName("Возврат из раздела Новости на предыдущую страницу приложения при тапе на BACK")
-  @Attachment
   public void returnFromNewsPageToPreviousPageByTapBack() {
-    AllureSteps.goToClaimsPageWithPressButtonOnMainPage();
-    AllureSteps.goToNewsPageWithPressNavigationMenuButton();
-    AllureSteps.pressBack();
-    AllureSteps.isFilterButtonDisplayed();
+    MainPageSteps.goToClaimsPageWithPressButtonOnMainPage();
+    MainPageSteps.goToNewsPageWithPressNavigationMenuButton();
+    BaseSteps.pressBack();
+    MainPageSteps.isFilterButtonDisplayed();
   }
 
   @Test
   @DisplayName("Переход в раздел О приложении с помощью кнопки в меню навигации приложения")
-  @Attachment
   public void isItPossibleToGoToAboutSectionWithNavigationMenuButton() {
-    AllureSteps.goToAboutPageWithPressNavigationMenuButton();
-    AllureSteps.isDeveloperTextViewDisplayed();
-    AllureSteps.pressBack();
+    MainPageSteps.goToAboutPageWithPressNavigationMenuButton();
+    MainPageSteps.isDeveloperTextViewDisplayed();
   }
 
   @Test
   @DisplayName("Возврат из раздела О приложении на предыдущую страницу приложения при тапе на BACK")
-  @Attachment
   public void returnFromAboutPageToPreviousPageByTapBack() {
-    AllureSteps.goToAboutPageWithPressNavigationMenuButton();
-    AllureSteps.pressBack();
-    AllureSteps.isAllClaimsButtonDisplayed();
+    MainPageSteps.goToAboutPageWithPressNavigationMenuButton();
+    BaseSteps.pressBack();
+    MainPageSteps.isAllClaimsButtonDisplayed();
   }
 
   @Test
   @DisplayName("Переход в раздел Цитаты с помощью кнопки на главной странице")
-  @Attachment
   public void isItPossibleToGoToQuotesSectionWithMainPageButton() {
-    AllureSteps.goToQuotesPageWithPressButtonOnMainPage();
-    AllureSteps.isHeaderQuotesPageDisplayed();
+    MainPageSteps.goToQuotesPageWithPressButtonOnMainPage();
+    MainPageSteps.isHeaderQuotesPageDisplayed();
   }
 
   @Test
   @DisplayName("Возврат из раздела Цитаты на предыдущую страницу приложения при тапе на BACK")
-  @Attachment
   public void returnFromQuotesPageToPreviousPageByTapBack() {
-    AllureSteps.goToQuotesPageWithPressButtonOnMainPage();
-    AllureSteps.pressBack();
-    AllureSteps.isAllClaimsButtonDisplayed();
+    MainPageSteps.goToQuotesPageWithPressButtonOnMainPage();
+    BaseSteps.pressBack();
+    MainPageSteps.isAllClaimsButtonDisplayed();
   }
 
   @Test
   @DisplayName("Создание Заявки с помощью кнопки на главной странице")
-  @Attachment
-  public void createNewClaimWithButtonOnMainPage() throws InterruptedException {
-    AllureSteps.addClaim();
-    AllureSteps.goToClaimsPageWithPressButtonOnMainPage();
-    AllureSteps.isClaimExist();
+  public void createNewClaimWithButtonOnMainPage() {
+    MainPageSteps.addClaim();
+    MainPageSteps.goToClaimsPageWithPressButtonOnMainPage();
+    MainPageSteps.isClaimExist();
   }
 
 }

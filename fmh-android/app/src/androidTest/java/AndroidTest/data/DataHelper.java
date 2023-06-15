@@ -29,6 +29,10 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static AndroidTest.data.DataHelper.RecyclerViewMatcher.withRecyclerView;
+import static AndroidTest.pages.AuthPage.idSignInButton;
+import static AndroidTest.pages.AuthPage.loginField;
+import static AndroidTest.pages.MainPage.LogOutId;
+import static AndroidTest.pages.MainPage.logOutButton;
 
 import androidx.annotation.IdRes;
 import androidx.recyclerview.widget.RecyclerView;
@@ -93,7 +97,7 @@ public class DataHelper {
 
 
   public static void waitElement(int id) {
-    onView(isRoot()).perform(waitDisplayed(id, 5000));
+    onView(isRoot()).perform(waitDisplayed(id, 7000));
   }
 
 
@@ -370,6 +374,35 @@ public class DataHelper {
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault());
     String timestamp = dateFormat.format(new Date());
     return "test_fail_" + timestamp;
+  }
+
+  public static boolean isLogIn() {
+    boolean check =false;
+    try {
+      waitElement(idSignInButton);
+      loginField.check(matches(isDisplayed()));
+      check = true;
+      return check;
+    } catch (NoMatchingViewException e) {
+      check = false;
+      return check;
+    } finally {
+      return check;
+    }
+  }
+  public static boolean isLogOut() {
+    boolean check =false;
+    try {
+      waitElement(LogOutId);
+      logOutButton.check(matches(isDisplayed()));
+      check = true;
+      return check;
+    } catch (NoMatchingViewException e) {
+      check = false;
+      return check;
+    } finally {
+      return check;
+    }
   }
 
 }

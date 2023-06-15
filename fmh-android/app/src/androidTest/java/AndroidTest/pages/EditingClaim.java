@@ -7,6 +7,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.CoreMatchers.allOf;
 import static AndroidTest.data.Data.commentClaim;
+import static AndroidTest.data.DataHelper.waitElement;
 import static AndroidTest.pages.MainPage.goToClaimesPage;
 
 import androidx.test.espresso.Espresso;
@@ -39,6 +40,7 @@ public class EditingClaim extends NewClaimPage {
     closeButton.perform(click());
     Espresso.pressBack();
     goToClaimesPage();
+    waitElement(R.id.claim_list_recycler_view);
   }
 
   public static void changeStatusToInCanceled() {
@@ -47,6 +49,7 @@ public class EditingClaim extends NewClaimPage {
     closeButton.perform(click());
     Espresso.pressBack();
     goToClaimesPage();
+    waitElement(R.id.claim_list_recycler_view);
   }
 
   public static void changeStatusToInExecuted() {
@@ -57,6 +60,7 @@ public class EditingClaim extends NewClaimPage {
     closeButton.perform(click());
     Espresso.pressBack();
     goToClaimesPage();
+    waitElement(R.id.claim_list_recycler_view);
   }
 
   public static void editingTittleClaim(String newTittle) {

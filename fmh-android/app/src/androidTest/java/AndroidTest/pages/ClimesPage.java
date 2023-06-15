@@ -15,7 +15,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.Matchers.anyOf;
-import static java.lang.Thread.sleep;
 import static AndroidTest.data.DataHelper.waitDisplayed;
 import static AndroidTest.data.DataHelper.waitElement;
 import static AndroidTest.pages.NewClaimPage.cancelButton;
@@ -25,8 +24,6 @@ import static AndroidTest.pages.NewClaimPage.descriptionField;
 import static AndroidTest.pages.NewClaimPage.saveButton;
 import static AndroidTest.pages.NewClaimPage.timeField;
 import static AndroidTest.pages.NewClaimPage.tittleField;
-
-import android.os.SystemClock;
 
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.test.espresso.Espresso;
@@ -46,6 +43,8 @@ public class ClimesPage {
   public static int filterClimesButtonID = R.id.filters_material_button;
   public static int listClaimsId = R.id.claim_list_recycler_view;
 
+  public static ViewInteraction refreshZoneClaims = onView(withId(R.id.filters_material_button));
+
 
   public static void fillingFieldsNewClime(String tittle, String date, String time, String description) {
     tittleField.perform(replaceText(tittle));
@@ -55,7 +54,7 @@ public class ClimesPage {
     ViewActions.closeSoftKeyboard();
   }
 
-  public static void isClaimExistWithParams(String tittle, String date, String time, String description) throws InterruptedException {
+  public static void isClaimExistWithParams(String tittle, String date, String time, String description){
     scrollAndClickToClaimWithTittle(tittle);
     onView(withId(R.id.title_text_view)).check(matches(withText(tittle)));
     onView(withId(R.id.plane_date_text_view)).check(matches(withText(date)));
@@ -82,7 +81,7 @@ public class ClimesPage {
     waitElement(R.id.claim_list_recycler_view);
   }
 
-  public static void checkFilteredClimes(ActivityScenarioRule<AppActivity> myActivityScenarioRule, boolean open, boolean inProgress, boolean executed, boolean cancelled) throws InterruptedException {
+  public static void checkFilteredClimes(ActivityScenarioRule<AppActivity> myActivityScenarioRule, boolean open, boolean inProgress, boolean executed, boolean cancelled) {
     onView(withId(R.id.claim_list_recycler_view))
         .perform(RecyclerViewActions.scrollToPosition(0));
     onView(withId(R.id.claim_list_recycler_view))
@@ -92,7 +91,6 @@ public class ClimesPage {
     for (int i = 0; i < itemCount; i++) {
       waitDisplayed(R.id.claim_list_recycler_view, 5000);
       scrollToPositionClaim(itemCount);
-      sleep(500);
       waitDisplayed(R.id.status_label_text_view, 15000);
       if (!open && !inProgress && !executed && !cancelled) {
         onView(withId(R.id.empty_claim_list_text_view))
@@ -170,13 +168,11 @@ public class ClimesPage {
     }
   }
 
-  public static void scrollAndClickToClaimWithTittle(String tittle) throws InterruptedException {
+  public static void scrollAndClickToClaimWithTittle(String tittle) {
     waitElement(R.id.claim_list_recycler_view);
-    sleep(500);
     onView(withId(R.id.claim_list_recycler_view))
         .check(matches(isDisplayed()))
         .perform(RecyclerViewActions.scrollTo(hasDescendant(allOf(withText(tittle)))));
-    sleep(500);
     onView(withId(R.id.claim_list_recycler_view))
         .check(matches(isDisplayed()))
         .perform(actionOnItem(hasDescendant(withText(tittle)), click()));
@@ -187,7 +183,7 @@ public class ClimesPage {
     fillingFieldsNewClime(tittle, date, time, description);
     saveButton.perform(click());
     waitElement(R.id.claim_list_recycler_view);
-    SystemClock.sleep(500);
+    refreshListOfNews();
   }
 
   public static void addNewClimeWithoutSomething(String tittle, String date, String time, String description) {
@@ -223,6 +219,11 @@ public class ClimesPage {
       itemCount[0] = recyclerView.getAdapter().getItemCount();
     });
     return itemCount[0];
+  }
+
+  public static void refreshListOfNews() {
+    refreshZoneClaims.perform(ViewActions.swipeDown());
+    waitElement(R.id.claim_list_recycler_view);
   }
 
 }

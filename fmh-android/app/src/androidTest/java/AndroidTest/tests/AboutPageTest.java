@@ -1,19 +1,15 @@
 package AndroidTest.tests;
 
-
-import static AndroidTest.Steps.AllureSteps.goToAboutPageStep;
-import static AndroidTest.Steps.AllureSteps.isAppDeveloperDisplayed;
-import static AndroidTest.Steps.AllureSteps.isAppVersionDisplayed;
-import static AndroidTest.Steps.AllureSteps.isWebPagePrivacyPolicyExistence;
-import static AndroidTest.Steps.AllureSteps.isWebPageTermsOfUseExistence;
-import static AndroidTest.Steps.AllureSteps.logOutFromApp;
-import static AndroidTest.Steps.AllureSteps.pressBack;
-import static AndroidTest.Steps.AllureSteps.successLoginStep;
+import static AndroidTest.pages.AuthPage.checkLogInAndLogInIfNot;
+import static AndroidTest.steps.AboutPageSteps.isAppDeveloperDisplayed;
+import static AndroidTest.steps.AboutPageSteps.isAppVersionDisplayed;
+import static AndroidTest.steps.AboutPageSteps.isWebPagePrivacyPolicyExistence;
+import static AndroidTest.steps.AboutPageSteps.isWebPageTermsOfUseExistence;
+import static AndroidTest.steps.BaseSteps.goToAboutPageStep;
 import static AndroidTest.data.DataHelper.getUniqueScreenshotName;
 
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -24,7 +20,6 @@ import io.qameta.allure.android.runners.AllureAndroidJUnit4;
 import io.qameta.allure.kotlin.Attachment;
 import io.qameta.allure.kotlin.Epic;
 import io.qameta.allure.kotlin.junit4.DisplayName;
-import io.qameta.allure.kotlin.junit4.Tag;
 import ru.iteco.fmhandroid.ui.AppActivity;
 
 @Epic("Тестирование страницы О приложении")
@@ -33,15 +28,11 @@ import ru.iteco.fmhandroid.ui.AppActivity;
 public class AboutPageTest {
 
   @Before
-  public void login() {
-    successLoginStep();
+  public void setUp() {
+    checkLogInAndLogInIfNot();
     goToAboutPageStep();
   }
 
-  @After
-  public void logOutApp() {
-    logOutFromApp();
-  }
 
   @Rule
   public ActivityScenarioRule<AppActivity> myActivityScenarioRule =
@@ -49,7 +40,7 @@ public class AboutPageTest {
 
   @Rule
   public ScreenshotRule screenshotRule =
-      new ScreenshotRule(ScreenshotRule.Mode.FAILURE, getUniqueScreenshotName() );
+      new ScreenshotRule(ScreenshotRule.Mode.FAILURE, getUniqueScreenshotName());
 
 
   @Test
@@ -57,30 +48,23 @@ public class AboutPageTest {
   @Attachment
   public void testVisibleVersion() {
     isAppVersionDisplayed();
-    pressBack();
   }
 
   @Test
   @DisplayName("Видимость сведений о  разработчике приложения")
-  @Attachment
   public void testVisibleDeveloper() {
     isAppDeveloperDisplayed();
-    pressBack();
   }
 
   @Test
   @DisplayName("Существование веб-страницы с политикой конфиденциальности")
-  @Attachment
   public void testPrivacyPolicyPageExistence() {
     isWebPagePrivacyPolicyExistence();
-    pressBack();
   }
 
   @Test
-  @Attachment
   @DisplayName("Существование веб-страницы с условиями использования")
   public void testЕTermsOfUsePageExistence() {
     isWebPageTermsOfUseExistence();
-    pressBack();
   }
 }

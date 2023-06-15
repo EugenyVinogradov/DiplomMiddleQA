@@ -8,7 +8,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 import static org.hamcrest.CoreMatchers.allOf;
-import static java.lang.Thread.sleep;
 import static AndroidTest.data.DataHelper.waitElement;
 import static AndroidTest.pages.NewsEditingPage.addNewsButton;
 
@@ -40,10 +39,9 @@ public class AddingNewsPage {
     descriptionField.perform(replaceText(description));
   }
 
-  public static void addNews(String category, String tittle, String date, String time, String description) throws InterruptedException {
+  public static void addNews(String category, String tittle, String date, String time, String description) {
     fillingNewsFields(category, tittle, date, time, description);
     saveButton.perform(click());
-    sleep(1000);
   }
 
   public static void confirmDelete() {

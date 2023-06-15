@@ -27,6 +27,7 @@ public class NewsPage {
   public static ViewInteraction descriptionText = onView(withId(R.id.news_item_description_text_view));
 
   public static void sortingNews() {
+    waitElement(R.id.news_list_recycler_view);
     sortingNewsButton.perform(click());
   }
 
@@ -47,6 +48,7 @@ public class NewsPage {
       checkboxNotActive.perform(click());
     }
     filterButton.perform(click());
+    waitElement(R.id.news_list_recycler_view);
   }
 
   public static void filterNewsByCategory(String category) {

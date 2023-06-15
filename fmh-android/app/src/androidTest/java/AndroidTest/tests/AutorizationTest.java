@@ -7,17 +7,18 @@ import static AndroidTest.data.Data.wrongLogin;
 import static AndroidTest.data.Data.wrongPassword;
 import static AndroidTest.data.DataHelper.getUniqueScreenshotName;
 import static AndroidTest.data.DataHelper.waitElement;
+import static AndroidTest.pages.AuthPage.checkLogOutAndLogOutIfNot;
 import static AndroidTest.pages.MainPage.LogOutId;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import AndroidTest.Steps.AllureSteps;
+import AndroidTest.steps.AutorizationPageSteps;
 import io.qameta.allure.android.rules.ScreenshotRule;
 import io.qameta.allure.android.runners.AllureAndroidJUnit4;
-import io.qameta.allure.kotlin.Attachment;
 import io.qameta.allure.kotlin.Epic;
 import io.qameta.allure.kotlin.junit4.DisplayName;
 import ru.iteco.fmhandroid.ui.AppActivity;
@@ -27,6 +28,11 @@ import ru.iteco.fmhandroid.ui.AppActivity;
 
 @RunWith(AllureAndroidJUnit4.class)
 public class AutorizationTest {
+
+  @Before
+  public void setUp() {
+    checkLogOutAndLogOutIfNot();
+  }
 
 
   @Rule
@@ -42,51 +48,45 @@ public class AutorizationTest {
   @Test
   @DisplayName("Авторизация с валидными логином и паролем")
   public void correctLoginAndPasswordAuthorizationTest() {
-    AllureSteps.login(correctLogin, correctPassword);
+    AutorizationPageSteps.login(correctLogin, correctPassword);
     waitElement(LogOutId);
-    AllureSteps.logOutIsVisible();
-    AllureSteps.logOutFromApp();
+    AutorizationPageSteps.logOutIsVisible();
   }
 
 
   @Test
-  @Attachment
   @DisplayName("Авторизация с незаполненными полями логина и пароля")
   public void emptyLoginAndPasswordAuthorizationTest() {
-    AllureSteps.login("", "");
-    AllureSteps.loginOrPasswordDoesntBeEmpty();
+    AutorizationPageSteps.login("", "");
+    AutorizationPageSteps.loginOrPasswordDoesntBeEmpty();
   }
 
   @Test
-  @Attachment
   @DisplayName("Ввод валидного логина и невалидого пароля при авторизации")
   public void correctLoginWrongPasswordAuthorizationTest() {
-    AllureSteps.login(correctLogin, wrongPassword);
-    AllureSteps.loginOrPasswordIsWrong();
+    AutorizationPageSteps.login(correctLogin, wrongPassword);
+    AutorizationPageSteps.loginOrPasswordIsWrong();
   }
 
   @Test
-  @Attachment
   @DisplayName("Ввод невалидного логина и валидого пароля при авторизации")
   public void wrongLoginWrongCorrectPasswordAuthorizationTest() {
-    AllureSteps.login(wrongLogin, correctPassword);
-    AllureSteps.loginOrPasswordIsWrong();
+    AutorizationPageSteps.login(wrongLogin, correctPassword);
+    AutorizationPageSteps.loginOrPasswordIsWrong();
   }
 
   @Test
-  @Attachment
   @DisplayName("Ввод валидного логина и пустого пароля при авторизации")
   public void correctLoginEmptyPasswordAuthorizationTest() {
-    AllureSteps.login(correctLogin, "");
-    AllureSteps.loginOrPasswordDoesntBeEmpty();
+    AutorizationPageSteps.login(correctLogin, "");
+    AutorizationPageSteps.loginOrPasswordDoesntBeEmpty();
   }
 
   @Test
-  @Attachment
   @DisplayName("Ввод пустого логина и валидного пароля при авторизации")
   public void emptyLoginCorrectPasswordAuthorizationTest() {
-    AllureSteps.login("", correctPassword);
-    AllureSteps.loginOrPasswordDoesntBeEmpty();
+    AutorizationPageSteps.login("", correctPassword);
+    AutorizationPageSteps.loginOrPasswordDoesntBeEmpty();
   }
 
 

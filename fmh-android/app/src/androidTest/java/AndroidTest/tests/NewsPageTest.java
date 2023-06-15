@@ -1,26 +1,26 @@
 package AndroidTest.tests;
 
-import static AndroidTest.Steps.AllureSteps.goToNewsPageStep;
-import static AndroidTest.Steps.AllureSteps.logOutFromApp;
-import static AndroidTest.Steps.AllureSteps.successLoginStep;
 import static AndroidTest.data.DataHelper.getUniqueScreenshotName;
+import static AndroidTest.data.DataHelper.waitElement;
+import static AndroidTest.pages.AuthPage.checkLogInAndLogInIfNot;
+import static AndroidTest.steps.BaseSteps.goToNewsPageStep;
 
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import AndroidTest.Steps.AllureSteps;
-
+import AndroidTest.steps.BaseSteps;
+import AndroidTest.steps.NewsEditingPageSteps;
+import AndroidTest.steps.NewsPageSteps;
 import io.qameta.allure.android.rules.ScreenshotRule;
 import io.qameta.allure.android.runners.AllureAndroidJUnit4;
-import io.qameta.allure.kotlin.Attachment;
 import io.qameta.allure.kotlin.Epic;
 import io.qameta.allure.kotlin.junit4.DisplayName;
+import ru.iteco.fmhandroid.R;
 import ru.iteco.fmhandroid.ui.AppActivity;
 
 @Epic("Тестирование страницы Новости")
@@ -30,14 +30,9 @@ public class NewsPageTest {
 
 
   @Before
-  public void login() {
-    successLoginStep();
+  public void setUp() {
+    checkLogInAndLogInIfNot();
     goToNewsPageStep();
-  }
-
-  @After
-  public void logOutApp() {
-    logOutFromApp();
   }
 
   @Rule
@@ -50,53 +45,51 @@ public class NewsPageTest {
 
   @Test
   @DisplayName("Сортировка новостей в списке новостей")
-  @Attachment
   public void testSortingNews() {
-    int itemCount = AllureSteps.getItemCount();
-    String firstDateBeforeSorting = AllureSteps.getFirstDateBeforeSortingNewsPage();
-    AllureSteps.scrollNewsToLastPosition(itemCount - 1);
-    String lastDateBeforeSorting = AllureSteps.getLastDateBeforeSortingNewsPage(itemCount - 1);
-    AllureSteps.sortingNewsStep();
-    AllureSteps.scrollNewsToFirstPosition();
-    String firstDateAfterSorting = AllureSteps.getFirstDateAfterSortingNewsPage();
-    AllureSteps.scrollNewsToLastPosition(itemCount - 1);
-    String lastDateAfterSorting = AllureSteps.getLastDateAfterSortingNewsPage(itemCount - 1);
-    AllureSteps.checkDateAfterSortingOne(firstDateBeforeSorting, lastDateAfterSorting);
-    AllureSteps.checkDateAfterSortingTwo(lastDateBeforeSorting, firstDateAfterSorting);
+    int itemCount = NewsEditingPageSteps.getItemCount();
+    String firstDateBeforeSorting = NewsPageSteps.getFirstDateBeforeSortingNewsPage();
+    NewsEditingPageSteps.scrollNewsToLastPosition(itemCount - 1);
+    String lastDateBeforeSorting = NewsPageSteps.getLastDateBeforeSortingNewsPage(itemCount - 1);
+    NewsEditingPageSteps.sortingNewsStep();
+    NewsEditingPageSteps.scrollNewsToFirstPosition();
+    String firstDateAfterSorting = NewsPageSteps.getFirstDateAfterSortingNewsPage();
+    NewsEditingPageSteps.scrollNewsToLastPosition(itemCount - 1);
+    String lastDateAfterSorting = NewsPageSteps.getLastDateAfterSortingNewsPage(itemCount - 1);
+    NewsEditingPageSteps.checkDateAfterSortingOne(firstDateBeforeSorting, lastDateAfterSorting);
+    NewsEditingPageSteps.checkDateAfterSortingTwo(lastDateBeforeSorting, firstDateAfterSorting);
   }
 
   @Test
   @DisplayName("Развернуть новость")
-  @Attachment
   public void testExpandNews() {
-    ViewInteraction recyclerView = AllureSteps.getRecyclerViewAndScrollToFirstPosition();
-    int heightBeforeClick = AllureSteps.getHeightBeforeClick(recyclerView);
-    AllureSteps.clickFirstItem(recyclerView);
-    int heightAfterClick = AllureSteps.getHeightAfterClick(recyclerView);
-    AllureSteps.checkHeightAfterClick(heightBeforeClick, heightAfterClick);
+    waitElement(R.id.news_list_recycler_view);
+    ViewInteraction recyclerView = NewsPageSteps.getRecyclerViewAndScrollToFirstPosition();
+    int heightBeforeClick = NewsPageSteps.getHeightBeforeClick(recyclerView);
+    NewsPageSteps.clickFirstItem(recyclerView);
+    int heightAfterClick = NewsPageSteps.getHeightAfterClick(recyclerView);
+    NewsPageSteps.checkHeightAfterClick(heightBeforeClick, heightAfterClick);
   }
 
   @Test
   @DisplayName("Свернуть новость")
-  @Attachment
   public void testCollapseNews() {
-    ViewInteraction recyclerView = AllureSteps.getRecyclerViewAndScrollToFirstPosition();
-    int heightBeforeClick = AllureSteps.getHeightBeforeClick(recyclerView);
-    AllureSteps.doubleClickFirstItem(recyclerView);
-    int heightAfterClick = AllureSteps.getHeightAfterClick(recyclerView);
-    AllureSteps.checkHeightAfterDoubleClick(heightBeforeClick, heightAfterClick);
+    waitElement(R.id.news_list_recycler_view);
+    ViewInteraction recyclerView = NewsPageSteps.getRecyclerViewAndScrollToFirstPosition();
+    int heightBeforeClick = NewsPageSteps.getHeightBeforeClick(recyclerView);
+    NewsPageSteps.doubleClickFirstItem(recyclerView);
+    int heightAfterClick = NewsPageSteps.getHeightAfterClick(recyclerView);
+    NewsPageSteps.checkHeightAfterDoubleClick(heightBeforeClick, heightAfterClick);
   }
 
   @Test
   @DisplayName("Фильтрация новостей по дате")
-  @Attachment
-  public void testFilterNewsByDate() throws InterruptedException {
-    AllureSteps.goToNewsEditingPageStep();
-    String expectedDate = AllureSteps.addingNewsAndReturnPublishDate();
-    AllureSteps.goToNewsPageStep();
-    AllureSteps.filterNewsByDateStep(expectedDate);
-    int itemCount = AllureSteps.getItemCount();
-    AllureSteps.checkPublishDateNews(itemCount, expectedDate);
+  public void testFilterNewsByDate() {
+    BaseSteps.goToNewsEditingPageStep();
+    String expectedDate = NewsPageSteps.addingNewsAndReturnPublishDate();
+    BaseSteps.goToNewsPageStep();
+    NewsPageSteps.filterNewsByDateStep(expectedDate);
+    int itemCount = NewsEditingPageSteps.getItemCount();
+    NewsPageSteps.checkPublishDateNews(itemCount, expectedDate);
   }
 
 }

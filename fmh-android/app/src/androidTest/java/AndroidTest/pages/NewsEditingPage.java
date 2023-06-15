@@ -20,6 +20,7 @@ import static AndroidTest.pages.EditingNews.saveButton;
 import static AndroidTest.pages.EditingNews.statusSwitcher;
 
 import androidx.test.espresso.ViewInteraction;
+import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.contrib.RecyclerViewActions;
 
 import ru.iteco.fmhandroid.R;
@@ -37,6 +38,7 @@ public class NewsEditingPage extends NewsPage {
   public static ViewInteraction editNewsButton = onView(withId(R.id.edit_news_item_image_view));
   public static ViewInteraction expandNewsButton = onView(withId(R.id.view_news_item_image_view));
   public static ViewInteraction descriptionNews = onView(withId(R.id.news_item_description_text_view));
+  public static ViewInteraction refreshZone = onView(withId(R.id.news_control_panel_swipe_to_refresh));
 
 
   public static void scrollNews(int i) {
@@ -46,12 +48,6 @@ public class NewsEditingPage extends NewsPage {
         .check(matches(isDisplayed()));
   }
 
-  public static void openNews(int i) {
-    onView(withId(R.id.news_list_recycler_view))
-        .perform(scrollToPosition(i))
-        .perform(actionOnItemAtPosition(i, scrollTo()))
-        .perform(clickChildViewWithId(R.id.edit_news_item_image_view));
-  }
 
   public static void scrollAndClickToNewsWithTittle(String tittle) {
     waitElement(R.id.news_list_recycler_view);
@@ -81,6 +77,11 @@ public class NewsEditingPage extends NewsPage {
     onView(allOf(withId(R.id.news_item_material_card_view), hasDescendant(withText(tittle))))
         .perform(clickChildViewWithId(R.id.delete_news_item_image_view));
     confirmDelete();
+  }
+
+  public static void refreshListOfNews() {
+    refreshZone.perform(ViewActions.swipeDown());
+    waitElement(R.id.news_list_recycler_view);
   }
 
 }
